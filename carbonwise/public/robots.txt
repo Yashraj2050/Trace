@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Block search engines from private dashboard areas
+Disallow: /dashboard/
+Disallow: /calculator/
+Disallow: /report/
+Disallow: /coach/
+Disallow: /habits/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://trace.ai/sitemap.xml

@@ -1,0 +1,353 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  /* Trace brand colors */
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-green-glow: rgba(16, 185, 129, 0.15);
+}
+
+/* ============================================
+   CINEMATIC LUXURY DARK THEME
+   ============================================ */
+:root {
+  --background: oklch(0% 0 0); /* Absolute black */
+  --foreground: oklch(98% 0 0); /* Pure white text */
+  --card: oklch(5% 0 0 / 50%); /* Translucent deep grey */
+  --card-foreground: oklch(98% 0 0);
+  --popover: oklch(5% 0 0 / 80%);
+  --popover-foreground: oklch(98% 0 0);
+  --primary: oklch(98% 0 0); /* White primary */
+  --primary-foreground: oklch(0% 0 0); /* Black text on primary */
+  --secondary: oklch(15% 0 0 / 60%);
+  --secondary-foreground: oklch(98% 0 0);
+  --muted: oklch(10% 0 0);
+  --muted-foreground: oklch(60% 0 0);
+  --accent: oklch(15% 0 0);
+  --accent-foreground: oklch(98% 0 0);
+  --destructive: oklch(50% 0.2 20);
+  --border: oklch(100% 0 0 / 8%);
+  --input: oklch(100% 0 0 / 8%);
+  --ring: oklch(100% 0 0 / 20%);
+  --radius: 0rem; /* Apple/Linear minimal style favors sharper or very specific radiuses. We'll use custom rounded classes where needed. */
+  --chart-1: oklch(100% 0 0);
+  --chart-2: oklch(80% 0 0);
+  --chart-3: oklch(60% 0 0);
+  --chart-4: oklch(40% 0 0);
+  --chart-5: oklch(20% 0 0);
+  --sidebar: oklch(2% 0 0);
+  --sidebar-foreground: oklch(98% 0 0);
+  --sidebar-primary: oklch(98% 0 0);
+  --sidebar-primary-foreground: oklch(0% 0 0);
+  --sidebar-accent: oklch(10% 0 0);
+  --sidebar-accent-foreground: oklch(98% 0 0);
+  --sidebar-border: oklch(100% 0 0 / 8%);
+  --sidebar-ring: oklch(100% 0 0 / 20%);
+}
+
+.dark {
+  /* Fallback to root for dark mode */
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  html {
+    @apply font-sans scroll-smooth;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-emerald-500/30 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-emerald-500/50;
+  }
+
+  ::selection {
+    @apply bg-emerald-500/20 text-emerald-900 dark:text-emerald-100;
+  }
+}
+
+/* ============================================
+   LENIS SMOOTH SCROLL & LAYOUT UTILITIES
+   ============================================ */
+@layer utilities {
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
+
+  /* Cinematic Premium HUD Overlay styles */
+  .hud-glass {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(24px) saturate(120%);
+    -webkit-backdrop-filter: blur(24px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+  }
+
+  .glow-white {
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.05), 0 0 60px rgba(255, 255, 255, 0.02);
+  }
+
+  /* Fluid Typography Clamping */
+  .text-fluid-hero {
+    font-size: clamp(3rem, 8vw, 10rem);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+
+  .text-fluid-h2 {
+    font-size: clamp(2rem, 5vw, 5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #fde68a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-gradient-card {
+    background: linear-gradient(135deg, 
+      rgba(16, 185, 129, 0.08) 0%, 
+      rgba(6, 182, 212, 0.05) 50%,
+      rgba(139, 92, 246, 0.04) 100%
+    );
+  }
+
+  .bg-mesh {
+    background-image: none;
+  }
+
+  /* Industrial/Linear Structural Grids */
+  .bg-grid-strict {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  }
+
+  .bg-dot-matrix {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .border-gradient {
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+
+  .border-gradient::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.4), rgba(6, 182, 212, 0.2), rgba(139, 92, 246, 0.2));
+    z-index: -1;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-green {
+    animation: pulse-green 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-gradient-x {
+    animation: gradient-x 4s ease infinite;
+    background-size: 200% 200%;
+  }
+
+  .grid-pattern {
+    background-image: none;
+  }
+
+  .chart-tooltip {
+    background: rgba(10, 20, 15, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .sidebar-active {
+    @apply bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-l-2 border-emerald-500;
+  }
+}
+
+/* ============================================
+   KEYFRAME ANIMATIONS
+   ============================================ */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes pulse-green {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes counter-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.08), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+/* ============================================
+   RECHARTS CUSTOMIZATION
+   ============================================ */
+.recharts-default-tooltip {
+  @apply !bg-card !border-border !rounded-xl !shadow-xl !text-sm;
+}
+
+.recharts-tooltip-label {
+  @apply !text-foreground !font-semibold !mb-2;
+}
+
+.recharts-tooltip-item {
+  @apply !text-muted-foreground;
+}
+
+.recharts-cartesian-axis-tick-value {
+  @apply !fill-muted-foreground !text-xs;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  @apply !stroke-border;
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+.skeleton {
+  @apply animate-pulse bg-muted rounded-lg;
+}
+
+/* ============================================
+   RESPONSIVE HELPERS
+   ============================================ */
+@media (max-width: 768px) {
+  .glass {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
