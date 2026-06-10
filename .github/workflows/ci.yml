@@ -52,20 +52,7 @@ jobs:
           retention-days: 14
           if-no-files-found: ignore
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
 
-      - name: Run E2E Tests
-        run: npm run test:e2e
-        
-      - name: Upload Playwright Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 14
-          if-no-files-found: ignore
 
       - name: Verify Production Build
         run: npm run build

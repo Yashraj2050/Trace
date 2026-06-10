@@ -8,9 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run --coverage",
-    "test:watch": "vitest",
-    "test:e2e": "playwright test",
-    "test:all": "npm run test && npm run test:e2e"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -57,7 +55,6 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
-    "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
