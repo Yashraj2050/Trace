@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="Trace Favicon">
+  <defs>
+    <linearGradient id="leafGradFav" x1="20" y1="8" x2="10" y2="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#8EC99A"/>
+      <stop offset="100%" stop-color="#2A5C32"/>
+    </linearGradient>
+  </defs>
+
+  <!-- T Crossbar -->
+  <rect x="1" y="2" width="30" height="4" rx="0.5" fill="white"/>
+
+  <!-- T Stem -->
+  <rect x="13.5" y="2" width="5" height="28" rx="0.5" fill="white"/>
+
+  <!-- Leaf: scaled down version, lower half of stem -->
+  <path
+    d="
+      M 16 12
+      C 20 9, 27 13, 24 20
+      C 21 27, 16 30, 16 30
+      C 16 30, 12 26, 13 20
+      C 14 14, 12 13, 16 12
+      Z
+    "
+    fill="url(#leafGradFav)"
+  />
+
+  <!-- Leaf vein -->
+  <path
+    d="M 16 30 C 17 24, 19 17, 23 11"
+    stroke="#1B3D20"
+    stroke-width="0.5"
+    stroke-linecap="round"
+    fill="none"
+    opacity="0.6"
+  />
+</svg>
