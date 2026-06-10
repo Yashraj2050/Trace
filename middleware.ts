@@ -37,8 +37,8 @@ export async function middleware(request: NextRequest) {
   ]
   const authRoutes = ['/login', '/signup']
 
-  const isProtected = protectedRoutes.some(route => pathname.startsWith(route))
-  const isAuthRoute = authRoutes.some(route => pathname.startsWith(route))
+  const isProtected = protectedRoutes.some(route => pathname === route || pathname.startsWith(`${route}/`))
+  const isAuthRoute = authRoutes.some(route => pathname === route || pathname.startsWith(`${route}/`))
 
   if (!user && isProtected) {
     const url = request.nextUrl.clone()
