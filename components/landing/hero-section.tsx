@@ -2,10 +2,11 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { EarthGlobe } from "@/components/landing/globe";
 
 export function HeroSection() {
   return (
-    <section className="relative w-full min-h-screen flex flex-col items-center justify-center pt-32 pb-16 px-6 md:px-12 bg-[#0a0a0a]">
+    <section className="relative w-full min-h-screen flex flex-col items-center justify-center pt-32 pb-16 px-6 md:px-12 bg-[#0a0a0a] overflow-hidden">
       {/* Background Grid Pattern - subtle */}
       <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" 
            style={{
@@ -16,6 +17,8 @@ export function HeroSection() {
       
       {/* Radial Gradient overlay to fade edges */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,transparent_0%,#0a0a0a_80%)] pointer-events-none"></div>
+
+      <EarthGlobe />
 
       <div className="z-10 flex flex-col items-center text-center max-w-5xl mx-auto mt-auto mb-auto">
         

@@ -57,3 +57,4 @@ test_*.js
 supabase/.branches
 supabase/.temp
 
+.env*
