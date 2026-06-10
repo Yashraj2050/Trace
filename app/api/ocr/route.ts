@@ -3,36 +3,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
-const CARBON_FACTORS: Record<string, Record<string, number>> = {
-  electricity: {
-    uk: 0.233,
-    us: 0.386,
-    eu: 0.295,
-    default: 0.3,
-  },
-  gas: { per_cubic_meter: 2.04, per_kwh: 0.184 },
-};
 
-function estimateElectricityCarbonFromText(text: string): number {
-  // Extract kWh from bill text
-  const kwhMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:kWh|kwh|KWH|units?)/i);
-  const kwh = kwhMatch ? parseFloat(kwhMatch[1]) : null;
 
-  if (kwh) {
-    return parseFloat((kwh * CARBON_FACTORS.electricity.default).toFixed(2));
-  }
-
-  // Try to find amount spent
-  const amountMatch = text.match(/[£$€]?\s*(\d+(?:\.\d+)?)/);
-  if (amountMatch) {
-    const amount = parseFloat(amountMatch[1]);
-    // Estimate kWh from cost (rough: £0.28/kWh UK average)
-    const estimatedKwh = amount / 0.28;
-    return parseFloat((estimatedKwh * 0.233).toFixed(2));
-  }
-
-  return 45.2; // Default estimate
-}
 
 export async function POST(request: NextRequest) {
   try {

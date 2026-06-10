@@ -90,7 +90,7 @@ export default function LogPage() {
       await fetchRecentLogs();
       // Force Next.js router cache to invalidate so Dashboard gets fresh data
       router.refresh();
-    } catch (e) {
+    } catch {
       toast.error("Failed to log activity");
     } finally {
       setLogging(null);

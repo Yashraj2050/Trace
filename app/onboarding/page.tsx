@@ -136,8 +136,7 @@ export default function OnboardingPage() {
         { category: "travel" as const, carbon_kg: stepOptions.flightsPerYear.find((o) => o.value === selections.flightsPerYear)?.carbonKg || 0 },
       ].filter((e) => e.carbon_kg > 0);
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const insertData: any = entries.map((e) => ({
+      const insertData: { user_id: string; category: string; carbon_kg: number; date: string; source: string; description: string }[] = entries.map((e) => ({
         user_id: user.id,
         category: e.category,
         carbon_kg: e.carbon_kg / 365,
@@ -146,6 +145,7 @@ export default function OnboardingPage() {
         description: "Initial baseline telemetry",
       }));
 
+      // @ts-expect-error - carbon_logs might not be fully typed in the generated Database types yet
       await supabase.from("carbon_logs").insert(insertData);
 
       toast.success("Telemetry baseline established.");

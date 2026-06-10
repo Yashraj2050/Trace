@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
-import { vi } from 'vitest';
+import { vi, beforeAll, afterAll } from 'vitest';
+import * as React from 'react';
 
 // Mock Next.js router
 vi.mock('next/navigation', () => ({
@@ -14,25 +15,26 @@ vi.mock('next/navigation', () => ({
 }));
 
 // Mock framer-motion to avoid animation issues in tests
-vi.mock('framer-motion', () => {
-  const React = require('react');
-  const actualFramerMotion = vi.importActual('framer-motion');
+/* eslint-disable @typescript-eslint/no-unused-vars */
+vi.mock('framer-motion', async () => {
+  const actualFramerMotion = await vi.importActual('framer-motion');
   
   // Custom mock component that renders its children
-  const mockComponent = React.forwardRef(({ children, ...props }: any, ref: any) => {
+  const mockComponent = React.forwardRef(({ children, ...props }: Record<string, unknown>, ref: React.ForwardedRef<unknown>) => {
     // Filter out motion props
     const { 
-      initial, animate, exit, transition, variants, 
-      whileHover, whileTap, whileInView, viewport, 
-      onAnimationStart, onAnimationComplete, layoutId,
+      initial: _i, animate: _a, exit: _e, transition: _t, variants: _v, 
+      whileHover: _wh, whileTap: _wt, whileInView: _wiv, viewport: _vp, 
+      onAnimationStart: _oas, onAnimationComplete: _oac, layoutId: _li,
       ...validProps 
     } = props;
     
-    return React.createElement('div', { ...validProps, ref }, children);
+    return React.createElement('div', { ...validProps, ref }, children as React.ReactNode);
   });
+  mockComponent.displayName = 'MockMotionComponent';
   
   return {
-    ...actualFramerMotion,
+    ...(actualFramerMotion as object),
     motion: {
       div: mockComponent,
       span: mockComponent,
@@ -46,11 +48,12 @@ vi.mock('framer-motion', () => {
       svg: mockComponent,
       path: mockComponent,
     },
-    AnimatePresence: ({ children }: any) => React.createElement(React.Fragment, null, children),
+    AnimatePresence: ({ children }: { children: React.ReactNode }) => React.createElement(React.Fragment, null, children),
   };
 });
 
 // Mock Canvas context for testing (needed by some charting libraries/confetti)
+// @ts-expect-error - Mocking canvas context for tests
 HTMLCanvasElement.prototype.getContext = () => {
   return {
     fillRect: vi.fn(),
@@ -77,7 +80,7 @@ HTMLCanvasElement.prototype.getContext = () => {
     transform: vi.fn(),
     rect: vi.fn(),
     clip: vi.fn(),
-  } as any;
+  } as unknown as CanvasRenderingContext2D;
 };
 
 // Mock ResizeObserver
@@ -86,3 +89,47 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
   disconnect() {}
 };
+
+// Mock cobe to prevent requestAnimationFrame infinite loops from hanging vitest coverage
+vi.mock('cobe', () => {
+  return {
+    default: () => ({ destroy: vi.fn() })
+  };
+});
+
+beforeAll(() => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'] });
+});
+
+// Globally mock Supabase client to prevent hanging fetch requests
+vi.mock('@/lib/supabase/server', () => ({
+  createClient: () => ({
+    auth: {
+      getUser: vi.fn().mockResolvedValue({ data: { user: { id: 'test-id' } }, error: null }),
+      signOut: vi.fn().mockResolvedValue({ error: null }),
+    },
+    from: vi.fn().mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: {}, error: null }),
+          order: vi.fn().mockReturnValue({
+            limit: vi.fn().mockResolvedValue({ data: [], error: null })
+          })
+        }),
+        order: vi.fn().mockReturnValue({
+          limit: vi.fn().mockResolvedValue({ data: [], error: null })
+        })
+      }),
+      insert: vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          single: vi.fn().mockResolvedValue({ data: {}, error: null })
+        })
+      })
+    })
+  })
+}));
+
+afterAll(() => {
+  vi.runOnlyPendingTimers();
+  vi.useRealTimers();
+});

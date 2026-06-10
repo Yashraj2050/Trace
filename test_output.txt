@@ -15,3 +15,20 @@
  [32m✓[39m __tests__/upload.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 61[2mms[22m[39m
  [31m❯[39m __tests__/landing.test.tsx [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 20[2mms[22m[39m
 [31m     [31m×[31m renders without crashing[39m[32m 19[2mms[22m[39m
+ [31m❯[39m e2e/auth.spec.ts [2m([22m[2m0 test[22m[2m)[22m
+ [31m❯[39m e2e/dashboard.spec.ts [2m([22m[2m0 test[22m[2m)[22m
+
+[31m⎯⎯⎯⎯[39m[1m[41m Unhandled Rejection [49m[22m[31m⎯⎯⎯⎯⎯[39m
+[31m[1mError[22m: Something removed the coverage directory "/Users/yashrajdnyaneshwarkuyate/Carbon_Footprint/coverage/.tmp" Vitest created earlier. Make sure you are not running multiple Vitests with the same "coverage.reportsDirectory" at the same time.[39m
+[90m [2m❯[22m V8CoverageProvider.normalizeCoverageFileError node_modules/vitest/dist/chunks/coverage.DM_a_rWm.js:[2m729:128[22m[39m
+[90m [2m❯[22m node_modules/vitest/dist/chunks/coverage.DM_a_rWm.js:[2m745:15[22m[39m
+
+[31m[1mCaused by: Error[22m: ENOENT: no such file or directory, open '/Users/yashrajdnyaneshwarkuyate/Carbon_Footprint/coverage/.tmp/coverage-7.json'[39m
+[90m [2m❯[22m open node:internal/fs/promises:[2m639:25[22m[39m
+[90m [2m❯[22m Object.writeFile node:internal/fs/promises:[2m1216:14[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22m[39m
+[31m[1mSerialized Error:[22m[39m [90m{ errno: -2, code: 'ENOENT', syscall: 'open', path: '/Users/yashrajdnyaneshwarkuyate/Carbon_Footprint/coverage/.tmp/coverage-7.json' }[39m
+
+
+

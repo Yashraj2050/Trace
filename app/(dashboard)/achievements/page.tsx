@@ -3,18 +3,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+
 import { Progress } from "@/components/ui/progress";
-import {
-  Trophy,
-  Lock,
-  Star,
-  Zap,
-  Crown,
-  Flame,
-  CheckCircle2,
-  Filter,
-} from "lucide-react";
+import { Trophy, Star, Crown, Lock, Flame, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const achievements = [

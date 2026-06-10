@@ -4,8 +4,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
 import {
   FileText,
   Download,
@@ -14,23 +12,16 @@ import {
   TrendingDown,
   Award,
   BarChart3,
-  Calendar,
   Star,
   CheckCircle2,
 } from "lucide-react";
 import { TraceLogoBase64 } from "@/lib/logoBase64";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
+import dynamic from "next/dynamic";
+
+const ReportChart = dynamic(() => import("@/components/dashboard/report-chart"), {
+  ssr: false,
+  loading: () => <div className="w-full h-[200px] flex flex-col items-center justify-center text-white/50 bg-white/5 rounded-xl border border-white/10 animate-pulse"><Loader2 className="w-4 h-4 animate-spin mb-2" /><span className="text-xs uppercase tracking-widest font-mono">Loading telemetry...</span></div>
+});
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -41,13 +32,6 @@ const monthlyData = [
   { month: "Oct", carbon: 310 },
   { month: "Nov", carbon: 290 },
   { month: "Dec", carbon: 265 },
-];
-
-const categoryData = [
-  { name: "Transport", value: 38, color: "#3b82f6" },
-  { name: "Energy", value: 27, color: "#10b981" },
-  { name: "Food", value: 21, color: "#f59e0b" },
-  { name: "Shopping", value: 14, color: "#8b5cf6" },
 ];
 
 const recommendations = [
@@ -272,21 +256,7 @@ export default function ReportPage() {
           <BarChart3 className="w-4 h-4 text-emerald-400" />
           6-Month Carbon Trend
         </h2>
-        <ResponsiveContainer width="100%" height={200}>
-          <AreaChart data={monthlyData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
-            <defs>
-              <linearGradient id="reportGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-            <XAxis dataKey="month" tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: "rgba(255,255,255,0.4)", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <Tooltip contentStyle={{ background: "oklch(0.12 0.015 160)", border: "1px solid rgba(16,185,129,0.2)", borderRadius: "12px", fontSize: "12px" }} />
-            <Area type="monotone" dataKey="carbon" name="CO₂ (kg)" stroke="#10b981" strokeWidth={2.5} fill="url(#reportGrad)" />
-          </AreaChart>
-        </ResponsiveContainer>
+        <ReportChart data={monthlyData} />
       </motion.div>
 
       {/* Recommendations */}

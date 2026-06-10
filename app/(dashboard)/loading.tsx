@@ -84,9 +84,9 @@ export default function DashboardLoading() {
             <div className="h-3 w-24 bg-white/5" />
           </div>
           <div className="flex-1 flex items-end gap-[1px]">
-            {[1,2,3,4,5,6,7,8,9,10,11,12].map((_, i) => (
+            {[1,2,3,4,5,6,7,8,9,10,11,12].map((val, i) => (
               <div key={i} className="flex-1 h-full flex items-end">
-                <div className="w-full bg-white/5" style={{ height: `${Math.max(20, Math.random() * 100)}%` }} />
+                <div className="w-full bg-white/5" style={{ height: `${20 + ((val * 37) % 80)}%` }} />
               </div>
             ))}
           </div>

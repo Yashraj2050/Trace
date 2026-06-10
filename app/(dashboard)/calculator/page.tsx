@@ -93,8 +93,7 @@ export default function CalculatorPage() {
         return { category: cat.id, carbon: parseFloat(carbon.toFixed(2)) };
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const entries: any[] = breakdown
+      const entries: { user_id: string; category: string; carbon_kg: number; date: string; source: string; description: string }[] = breakdown
         .filter((b) => b.carbon > 0)
         .map((b) => ({
           user_id: user.id,

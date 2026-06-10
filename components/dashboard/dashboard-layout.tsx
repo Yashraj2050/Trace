@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,18 +10,14 @@ import {
   Calculator,
   MessageSquare,
   Upload,
-  TrendingDown,
   Trophy,
   Users,
   FileText,
-  Leaf,
   LogOut,
   Moon,
   Sun,
   Menu,
   X,
-  Settings,
-  Bell,
   Target,
   Zap,
 } from "lucide-react";

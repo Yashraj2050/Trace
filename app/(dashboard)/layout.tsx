@@ -9,8 +9,7 @@ export default async function DashboardRootLayout({
   children: React.ReactNode;
 }) {
   let user = null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let profile: any = null;
+  let profile: { full_name?: string | null; sustainability_score?: number | null; streak_days?: number | null; onboarding_completed?: boolean | null } | null = null;
 
   try {
     const supabase = await createClient();
@@ -28,7 +27,7 @@ export default async function DashboardRootLayout({
       if (profileError) {
         redirect("/login");
       }
-      profile = data;
+      profile = data as { full_name?: string | null; sustainability_score?: number | null; streak_days?: number | null; onboarding_completed?: boolean | null } | null;
     }
   } catch (err) {
     console.error("Layout authentication error:", err);
@@ -91,7 +90,7 @@ export default async function DashboardRootLayout({
         <header className="h-14 border-b border-white/10 flex items-center px-8 justify-between bg-[#0a0a0a]/80 backdrop-blur-md sticky top-0 z-40">
           <div className="flex items-center gap-4 text-[10px] font-mono uppercase tracking-widest text-white/40">
             <span>Node: <span className="text-white/80">{profile?.full_name?.split(' ')[0] || 'Operator'}</span></span>
-            <span>//</span>
+            <span>{"//"}</span>
             <span>Network: <span className="text-emerald-400">Stable</span></span>
           </div>
           <div className="flex items-center gap-4 text-[10px] font-mono uppercase tracking-widest text-white/40">

@@ -28,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install Dependencies
@@ -50,6 +50,7 @@ jobs:
           name: coverage-report
           path: coverage/
           retention-days: 14
+          if-no-files-found: ignore
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
@@ -64,6 +65,7 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
+          if-no-files-found: ignore
 
       - name: Verify Production Build
         run: npm run build

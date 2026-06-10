@@ -26,7 +26,7 @@ vi.mock('@/lib/supabase/server', () => ({
 describe('Profile Page', () => {
   it('renders without crashing', async () => {
     const Page = await ProfilePage();
-    let container: any;
+    let container: HTMLElement | undefined;
     await act(async () => {
       const result = render(Page);
       container = result.container;

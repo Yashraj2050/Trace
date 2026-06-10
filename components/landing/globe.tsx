@@ -37,8 +37,8 @@ export function EarthGlobe() {
         { location: [-23.5505, -46.6333], size: 0.04 }, // Sao Paulo
         { location: [1.3521, 103.8198], size: 0.03 }, // Singapore
       ],
-      // @ts-ignore
-      onRender: (state: any) => {
+      // @ts-expect-error - onRender is missing from COBEOptions type definition
+      onRender: (state: Record<string, unknown>) => {
         // Called on every animation frame.
         // `state` will be an empty object, return updated params.
         state.phi = phi;

@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDropzone } from "react-dropzone";
+import Image from "next/image";
 import {
   Upload,
   FileText,
@@ -232,10 +233,9 @@ export default function UploadPage() {
                     className="border border-white/10 bg-[#0a0a0a] p-4 flex flex-col gap-4"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
+                      <div className="w-12 h-12 relative bg-white/5 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
                         {uploadedFile.preview ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={uploadedFile.preview} alt="preview" className="w-full h-full object-cover grayscale opacity-80" />
+                          <Image src={uploadedFile.preview} alt="preview" fill className="object-cover grayscale opacity-80" />
                         ) : (
                           <FileText className="w-4 h-4 text-white/50" />
                         )}

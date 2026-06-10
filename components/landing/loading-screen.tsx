@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
-export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
+export function LoadingScreen({ onComplete }: { onComplete?: () => void }) {
   const [isVisible, setIsVisible] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState<boolean | null>(null);
 
@@ -12,11 +12,10 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
     if (hasLoaded) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsFirstLoad(false);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsVisible(false);
-      onComplete();
+      if (onComplete) onComplete();
     } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+       
       setIsFirstLoad(true);
       const timer = setTimeout(() => {
         setIsVisible(false);

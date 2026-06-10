@@ -6,19 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import {
-  Target,
-  Plus,
-  Check,
-  Flame,
-  Leaf,
-  Car,
-  Home,
-  Utensils,
-  ShoppingBag,
-  Trash2,
-  X,
-} from "lucide-react";
+import { Target, Leaf, Flame, Plus, Check, Trash2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
