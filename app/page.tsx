@@ -20,6 +20,7 @@ export default function CinematicLandingPage() {
     const ctx = gsap.context(() => {
       // Simple fade up for text elements
       const elements = gsap.utils.toArray('.reveal-text');
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       elements.forEach((el: any) => {
         gsap.fromTo(el, 
           { y: 50, opacity: 0 },

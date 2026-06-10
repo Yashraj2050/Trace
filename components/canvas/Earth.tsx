@@ -1,16 +1,31 @@
 "use client";
 
-import { useRef, useMemo, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Sphere, MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
-import { gsap } from "gsap";
+
+// Generated once at module load — avoids calling Math.random() during render
+const PARTICLES_COUNT = 4000;
+const PARTICLE_POSITIONS = (() => {
+  const p = new Float32Array(PARTICLES_COUNT * 3);
+  for (let i = 0; i < PARTICLES_COUNT; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos((Math.random() * 2) - 1);
+    const r = 2.2 + Math.random() * 0.8;
+    p[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+    p[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+    p[i * 3 + 2] = r * Math.cos(phi);
+  }
+  return p;
+})();
 
 export function Earth() {
   const groupRef = useRef<THREE.Group>(null);
   const meshRef = useRef<THREE.Mesh>(null);
   const atmosphereRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.MeshStandardMaterial>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const distortRef = useRef<any>(null);
   const particlesRef = useRef<THREE.Points>(null);
 
@@ -25,22 +40,6 @@ export function Earth() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Generate particles
-  const particlesCount = 4000;
-  const positions = useMemo(() => {
-    const p = new Float32Array(particlesCount * 3);
-    for (let i = 0; i < particlesCount; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos((Math.random() * 2) - 1);
-      // Base radius + noise
-      const r = 2.2 + Math.random() * 0.8;
-      p[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      p[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      p[i * 3 + 2] = r * Math.cos(phi);
-    }
-    return p;
   }, []);
 
   useFrame((state, delta) => {
@@ -128,7 +127,7 @@ export function Earth() {
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            args={[positions, 3]}
+            args={[PARTICLE_POSITIONS, 3]}
           />
         </bufferGeometry>
         <pointsMaterial

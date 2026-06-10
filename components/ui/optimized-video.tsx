@@ -13,48 +13,51 @@ interface OptimizedVideoProps {
 export function OptimizedVideo({ src, poster, className, priority = false }: OptimizedVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [shouldPlay, setShouldPlay] = useState(priority);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) return true;
+    // Also treat low-quality connections as reduced motion
+    if ('connection' in navigator) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const conn = (navigator as any).connection;
+      if (conn?.saveData || conn?.effectiveType === '2g' || conn?.effectiveType === '3g') {
+        return true;
+      }
+    }
+    return false;
+  });
 
   useEffect(() => {
-    // Check for reduced motion preference
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mediaQuery.matches);
 
     const handleMotionChange = (e: MediaQueryListEvent) => {
       setPrefersReducedMotion(e.matches);
     };
 
     mediaQuery.addEventListener("change", handleMotionChange);
-    
-    // Check for low-end connections (Save-Data or slow connections)
-    if ("connection" in navigator) {
-      const conn = (navigator as any).connection;
-      if (conn.saveData || conn.effectiveType === "2g" || conn.effectiveType === "3g") {
-        setPrefersReducedMotion(true); // Treat as reduced motion to prevent video download/play
-      }
-    }
-
     return () => mediaQuery.removeEventListener("change", handleMotionChange);
   }, []);
 
   useEffect(() => {
     if (priority || prefersReducedMotion) return;
 
+    const videoEl = videoRef.current;
     // Intersection Observer for lazy loading/playing
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setShouldPlay(true);
-            if (videoRef.current) {
-              videoRef.current.play().catch(() => {
+            if (videoEl) {
+              videoEl.play().catch(() => {
                 // Ignore auto-play rejections
               });
             }
           } else {
             setShouldPlay(false);
-            if (videoRef.current) {
-              videoRef.current.pause();
+            if (videoEl) {
+              videoEl.pause();
             }
           }
         });
@@ -64,12 +67,12 @@ export function OptimizedVideo({ src, poster, className, priority = false }: Opt
       }
     );
 
-    if (videoRef.current) {
-      observer.observe(videoRef.current);
+    if (videoEl) {
+      observer.observe(videoEl);
     }
 
     return () => {
-      if (videoRef.current) observer.unobserve(videoRef.current);
+      if (videoEl) observer.unobserve(videoEl);
     };
   }, [priority, prefersReducedMotion]);
 

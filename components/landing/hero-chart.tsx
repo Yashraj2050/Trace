@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import {
   AreaChart,
   Area,
@@ -22,12 +21,24 @@ const data = [
   { month: "Aug", footprint: 280, target: 310, industry: 765 },
 ];
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+interface TooltipEntry {
+  name: string;
+  value: number;
+  color: string;
+}
+
+interface CustomTooltipProps {
+  active?: boolean;
+  payload?: TooltipEntry[];
+  label?: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="glass-dark rounded-xl p-3 border border-emerald-500/20 text-sm">
         <p className="text-emerald-400 font-semibold mb-2">{label}</p>
-        {payload.map((entry: any) => (
+        {payload.map((entry: TooltipEntry) => (
           <div key={entry.name} className="flex items-center gap-2 text-xs">
             <div
               className="w-2 h-2 rounded-full"

@@ -1,8 +1,23 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+
+// Generated once at module load — avoids Math.random() during render
+const COACH_PARTICLES_COUNT = 800;
+const COACH_PARTICLE_POSITIONS = (() => {
+  const p = new Float32Array(COACH_PARTICLES_COUNT * 3);
+  for (let i = 0; i < COACH_PARTICLES_COUNT; i++) {
+    const r = 2 * Math.cbrt(Math.random());
+    const theta = Math.random() * 2 * Math.PI;
+    const phi = Math.acos(2 * Math.random() - 1);
+    p[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+    p[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+    p[i * 3 + 2] = r * Math.cos(phi);
+  }
+  return p;
+})();
 
 interface CoachParticlesProps {
   isThinking: boolean;
@@ -11,21 +26,6 @@ interface CoachParticlesProps {
 function ParticleSwarm({ isThinking }: { isThinking: boolean }) {
   const pointsRef = useRef<THREE.Points>(null);
   const materialRef = useRef<THREE.PointsMaterial>(null);
-
-  const particlesCount = 800;
-  const positions = useMemo(() => {
-    const p = new Float32Array(particlesCount * 3);
-    for (let i = 0; i < particlesCount; i++) {
-      const r = 2 * Math.cbrt(Math.random());
-      const theta = Math.random() * 2 * Math.PI;
-      const phi = Math.acos(2 * Math.random() - 1);
-      
-      p[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      p[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      p[i * 3 + 2] = r * Math.cos(phi);
-    }
-    return p;
-  }, []);
 
   useFrame((state, delta) => {
     if (pointsRef.current) {
@@ -52,7 +52,7 @@ function ParticleSwarm({ isThinking }: { isThinking: boolean }) {
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-position" args={[COACH_PARTICLE_POSITIONS, 3]} />
       </bufferGeometry>
       <pointsMaterial
         ref={materialRef}

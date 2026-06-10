@@ -8,6 +8,7 @@ export default async function DashboardRootLayout({
   children: React.ReactNode;
 }) {
   let user = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let profile: any = null;
 
   try {

@@ -30,8 +30,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files — keep .env.example tracked, ignore all others
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # vercel
 .vercel
@@ -39,3 +43,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# test / debug scripts
+test-*.mjs
+test-*.js
+test_*.js
+*.log
+
+# python utility scripts (not part of deployment)
+*.py
+
+# supabase local
+supabase/.branches
+supabase/.temp
+

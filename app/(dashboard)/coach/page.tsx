@@ -112,6 +112,7 @@ export default function CoachPage() {
     if (!content.trim() || isLoading) return;
 
     const userMessage: Message = {
+      // eslint-disable-next-line react-hooks/purity
       id: Date.now().toString(),
       role: "user",
       content: content.trim(),
@@ -140,6 +141,7 @@ export default function CoachPage() {
       const data = await response.json();
 
       const assistantMessage: Message = {
+        // eslint-disable-next-line react-hooks/purity
         id: (Date.now() + 1).toString(),
         role: "assistant",
         content: data.response || "Processing failed. Data stream interrupted.",
@@ -150,6 +152,7 @@ export default function CoachPage() {
     } catch {
       toast.error("Uplink failed.");
       const errorMessage: Message = {
+        // eslint-disable-next-line react-hooks/purity
         id: (Date.now() + 1).toString(),
         role: "assistant",
         content: "API uplink disconnected. Operating in offline mode. Recommendation: Reduce energy grid usage.",

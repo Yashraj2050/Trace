@@ -110,6 +110,7 @@ export default function CalculatorPage() {
         return;
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await supabase.from("carbon_logs").insert(entries as any);
       if (error) throw error;
 
