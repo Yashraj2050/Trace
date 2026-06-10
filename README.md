@@ -182,11 +182,29 @@ npx vercel --prod
 
 ## Screenshots
 
-> Screenshots are taken from the live app.
+### Landing Experience
+<img src="public/readme/01-homepage-editorial.png" width="800" alt="Landing Page Hero" />
 
-| Landing Page | Dashboard | Insights |
-|---|---|---|
-| ![Landing](public/og-image.png) | *See /dashboard* | *See /insights* |
+### Dashboard
+<img src="public/readme/03-dashboard.png" width="800" alt="Mission Control Dashboard" />
+
+### Intelligence Engine
+<img src="public/readme/04-insights.png" width="800" alt="Behavioral Insights" />
+
+### OCR Upload
+<img src="public/readme/05-upload.png" width="800" alt="AI Smart Scan Upload" />
+
+### Community
+<img src="public/readme/06-community.png" width="800" alt="Global Network" />
+
+### Profile
+<img src="public/readme/07-profile.png" width="800" alt="User Profile" />
+
+### Mobile Experience
+<div style="display: flex; gap: 20px;">
+  <img src="public/readme/08-mobile-home.png" width="300" alt="Mobile Landing" />
+  <img src="public/readme/09-mobile-dashboard.png" width="300" alt="Mobile Dashboard" />
+</div>
 
 ---
 
