@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Leaf, Cpu, Activity, TrendingDown } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, Activity, Terminal } from "lucide-react";
 import Link from "next/link";
 
 export default function MissionControl() {
@@ -16,113 +16,148 @@ export default function MissionControl() {
   if (!mounted) return null;
 
   return (
-    <div className="w-full flex flex-col pointer-events-auto">
+    <div className="w-full flex flex-col pointer-events-auto selection:bg-white/20">
       
-      <div className="flex justify-between items-end mb-8">
+      {/* Header Area */}
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-8 gap-4 border-b border-white/10 pb-6">
         <div>
-          <h1 className="text-3xl font-medium tracking-tight mb-1">Mission Control</h1>
-          <p className="text-sm text-white/50 font-mono uppercase tracking-widest">Global Node Status</p>
+          <div className="flex items-center gap-2 mb-2">
+            <Terminal className="w-4 h-4 text-emerald-400" />
+            <h1 className="text-xl font-medium tracking-tight">Mission Control</h1>
+          </div>
+          <p className="text-[10px] text-white/50 font-mono uppercase tracking-widest">Sys_Readout // Primary Node Metrics</p>
         </div>
-        <div className="flex items-center gap-2 text-emerald-400 text-xs font-mono uppercase tracking-widest bg-emerald-400/10 px-3 py-1.5 border border-emerald-400/20">
-          <ArrowUpRight className="w-3 h-3 rotate-180" />
-          <span>12.4% Reduction</span>
+        <div className="flex items-center gap-4 text-[10px] font-mono uppercase tracking-widest">
+          <div className="flex items-center gap-2 text-emerald-400 bg-emerald-400/5 px-2 py-1 border border-emerald-400/20">
+            <ArrowDownRight className="w-3 h-3" />
+            <span>30D Trend: -12.4%</span>
+          </div>
+          <div className="flex items-center gap-2 text-white/50">
+            <Activity className="w-3 h-3" />
+            <span>Realtime</span>
+          </div>
         </div>
       </div>
 
-      {/* Top Main Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      {/* Structured Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-12 gap-px bg-white/10 border border-white/10 rounded-sm overflow-hidden">
+        
+        {/* Primary Impact Metric */}
         <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="col-span-1 md:col-span-2 p-8 border border-white/10 bg-[#111] flex flex-col justify-between"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="col-span-1 md:col-span-4 lg:col-span-8 p-8 bg-[#0a0a0a] flex flex-col justify-between min-h-[280px]"
         >
-          <div className="text-xs font-mono uppercase tracking-widest text-white/40 mb-12">Atmospheric Impact</div>
-          <div className="flex items-end gap-3">
-            <span className="text-7xl font-bold tracking-tighter leading-none">265</span>
-            <span className="text-sm font-mono text-emerald-400 uppercase tracking-widest pb-1">kg_CO2</span>
+          <div className="flex justify-between items-start mb-12">
+            <div className="text-[10px] font-mono uppercase tracking-widest text-white/40">Atmospheric Impact [YTD]</div>
+            <div className="text-[10px] font-mono text-emerald-400 border border-emerald-400/20 px-2 py-0.5 rounded-sm bg-emerald-400/5">Nominal</div>
+          </div>
+          <div className="flex items-baseline gap-4">
+            <span className="text-7xl md:text-9xl font-medium tracking-tighter leading-none">265</span>
+            <div className="flex flex-col text-sm font-mono text-white/40 uppercase tracking-widest pb-2">
+              <span>kg_CO2</span>
+              <span className="text-emerald-400 text-[10px] flex items-center gap-1 mt-1">
+                <ArrowDownRight className="w-3 h-3" /> 12% vs LY
+              </span>
+            </div>
           </div>
         </motion.div>
 
+        {/* Sync Rate / Quick Stats */}
         <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="p-8 border border-white/10 bg-[#111] flex flex-col justify-between"
+          className="col-span-1 md:col-span-4 lg:col-span-4 bg-[#0a0a0a] flex flex-col"
         >
-          <div className="text-xs font-mono uppercase tracking-widest text-white/40 mb-12 flex items-center gap-2">
-            <Activity className="w-3 h-3" /> Sync_Rate
+          <div className="p-6 border-b border-white/10 flex-1 flex flex-col justify-between">
+            <div className="text-[10px] font-mono uppercase tracking-widest text-white/40 mb-6">OS Sync Rate</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-medium tracking-tighter leading-none">72</span>
+              <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">/ 100</span>
+            </div>
           </div>
-          <div className="flex items-end gap-3">
-            <span className="text-5xl font-bold tracking-tighter leading-none">72</span>
-            <span className="text-sm font-mono text-white/40 uppercase tracking-widest pb-1">OS</span>
+          <div className="p-6 flex-1 flex flex-col justify-between">
+            <div className="text-[10px] font-mono uppercase tracking-widest text-white/40 mb-6">Restored Mass</div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-medium tracking-tighter leading-none text-emerald-400">37</span>
+              <span className="text-[10px] font-mono text-emerald-400/50 uppercase tracking-widest">KG</span>
+            </div>
           </div>
         </motion.div>
-      </div>
 
-      {/* Secondary Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        {/* Dense Telemetry Row */}
         <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="p-6 border border-white/10 bg-[#111]"
+          className="col-span-1 md:col-span-4 lg:col-span-3 p-6 bg-[#0a0a0a]"
         >
-          <div className="text-xs font-mono uppercase tracking-widest text-white/40 mb-6 flex items-center gap-2">
-            <Leaf className="w-3 h-3" /> Restored
-          </div>
-          <p className="text-3xl font-medium tracking-tight">37<span className="text-xs font-mono text-white/30 ml-2">KG</span></p>
+          <div className="text-[10px] font-mono uppercase tracking-widest text-white/40 mb-6">Last Upload</div>
+          <p className="text-lg font-medium tracking-tight">Q2 Transit Log</p>
+          <p className="text-[10px] font-mono text-white/50 mt-2">-4.2 kg impact</p>
         </motion.div>
 
         <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="p-6 border border-white/10 bg-[#111]"
+          className="col-span-1 md:col-span-4 lg:col-span-3 p-6 bg-[#0a0a0a]"
         >
-          <div className="text-xs font-mono uppercase tracking-widest text-white/40 mb-6 flex items-center gap-2">
-            <TrendingDown className="w-3 h-3" /> Trend
-          </div>
-          <p className="text-3xl font-medium tracking-tight">-1.2<span className="text-xs font-mono text-white/30 ml-2">KG/DAY</span></p>
+          <div className="text-[10px] font-mono uppercase tracking-widest text-white/40 mb-6">Community Rank</div>
+          <p className="text-lg font-medium tracking-tight">Top 15%</p>
+          <p className="text-[10px] font-mono text-white/50 mt-2">Node_Sector: 7A</p>
         </motion.div>
 
         <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="group border border-emerald-400/20 bg-emerald-400/5 hover:bg-emerald-400/10 transition-colors p-6 flex flex-col justify-center relative overflow-hidden"
+          className="col-span-1 md:col-span-4 lg:col-span-6 p-0 bg-[#0a0a0a] group relative overflow-hidden"
         >
           <Link href="/upload" className="absolute inset-0 z-10" />
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 border border-emerald-400/30 flex items-center justify-center bg-emerald-400/10">
-              <Cpu className="w-5 h-5 text-emerald-400" />
+          <div className="w-full h-full p-6 flex flex-col justify-between border border-transparent group-hover:border-emerald-400/30 transition-colors bg-gradient-to-br from-transparent to-emerald-400/5">
+            <div className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+              Action Required
             </div>
-            <div>
-              <p className="text-sm font-mono font-medium tracking-widest uppercase text-white/90">Initialize_Scan</p>
-              <p className="text-[10px] font-mono text-white/50 mt-1 uppercase">Drop data to array</p>
+            <div className="mt-8 flex items-center justify-between">
+              <div>
+                <p className="text-sm font-mono font-medium tracking-widest uppercase text-white/90">Initialize_Scanner</p>
+                <p className="text-[10px] font-mono text-white/50 mt-1 uppercase">Process new telemetry data</p>
+              </div>
+              <ArrowUpRight className="w-5 h-5 text-white/30 group-hover:text-emerald-400 transition-colors" />
             </div>
           </div>
         </motion.div>
+
+        {/* Minimalist Data Sparkline Mockup */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="col-span-1 md:col-span-4 lg:col-span-12 p-6 bg-[#0a0a0a] h-48 flex flex-col"
+        >
+          <div className="flex justify-between items-center mb-6">
+            <div className="text-[10px] font-mono uppercase tracking-widest text-white/40">Emissions Array [12M]</div>
+            <div className="text-[10px] font-mono text-white/30">Target: 45kg/mo</div>
+          </div>
+          <div className="flex-1 flex items-end gap-[1px]">
+            {[40, 65, 45, 80, 55, 90, 45, 30, 60, 35, 20, 40].map((h, i) => (
+              <div 
+                key={i}
+                className="flex-1 group relative h-full flex items-end"
+              >
+                <div 
+                  style={{ height: `${h}%` }}
+                  className="w-full bg-white/10 group-hover:bg-emerald-400/80 transition-colors"
+                />
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
       </div>
-
-      {/* Minimalist Chart Mockup */}
-      <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="w-full h-64 border border-white/10 bg-[#111] p-6 flex flex-col relative"
-      >
-        <div className="text-xs font-mono uppercase tracking-widest text-white/40 mb-6">Emissions Trend Array</div>
-        <div className="flex-1 flex items-end gap-2 px-1 pb-2 border-b border-white/10">
-          {[40, 65, 45, 80, 55, 90, 45, 30, 60, 35, 20, 40].map((h, i) => (
-            <div 
-              key={i}
-              style={{ height: `${h}%` }}
-              className="flex-1 bg-white/10 hover:bg-emerald-400/80 transition-colors rounded-t-sm"
-            />
-          ))}
-        </div>
-      </motion.div>
-
     </div>
   );
 }
