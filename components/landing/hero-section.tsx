@@ -2,7 +2,16 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { EarthGlobe } from "@/components/landing/globe";
+import dynamic from "next/dynamic";
+
+const EarthGlobe = dynamic(() => import("@/components/landing/globe").then((mod) => mod.EarthGlobe), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none z-0">
+      <div className="relative w-[150%] md:w-[80%] lg:w-[60%] aspect-square opacity-[0.05] translate-y-1/4 rounded-full border border-white/10" />
+    </div>
+  ),
+});
 
 export function HeroSection() {
   return (
