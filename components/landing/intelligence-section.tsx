@@ -8,48 +8,61 @@ const modelComponents = [
     title: "Behavioral Graph",
     description:
       "Maps your daily habits into a connected node structure to identify cascading inefficiencies in your routine.",
-    dark: false,
   },
   {
     id: "02",
     title: "Anomaly Detection",
     description:
       "Flags unusual spikes in consumption instantly, allowing you to correct excessive energy or transport usage in real-time.",
-    dark: false,
   },
   {
     id: "03",
     title: "Friction Analysis",
     description:
       "Calculates the probability of habit adherence, recommending only adjustments that fall within your personal tolerance matrix.",
-    dark: false,
   },
 ] as const;
 
 export function IntelligenceSection() {
   return (
     <section
-      className="w-full py-32 px-6 md:px-12 bg-white text-black overflow-hidden"
+      className="relative w-full min-h-screen py-32 px-6 md:px-12 bg-[#050505] text-white overflow-hidden flex items-center"
       aria-label="Intelligence engine — Predictive environmental modeling"
     >
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
+      {/* Cinematic Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="/images/ai-core-poster.jpg"
+          className="object-cover w-full h-full opacity-30 mix-blend-screen"
+        >
+          <source src="/videos/ai-core.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-[#050505]/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505] opacity-90" />
+      </div>
+
+      <div className="max-w-7xl mx-auto w-full relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
           {/* Left Column: Typography */}
-          <div className="lg:col-span-5 flex flex-col justify-center">
+          <div className="flex flex-col justify-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             >
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-black/40 mb-6">
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40 mb-8">
                 Intelligence Engine
               </p>
-              <h2 className="text-4xl md:text-6xl font-medium tracking-tight mb-8 leading-[1.1]">
-                Predictive <br /> environmental <br /> modeling.
+              <h2 className="text-5xl md:text-7xl font-medium tracking-tighter mb-10 leading-[1.05]">
+                Predictive <br /> <span className="text-white/50 italic font-serif">environmental</span> <br /> modeling.
               </h2>
 
-              <div className="space-y-6 text-lg text-black/70 font-light leading-relaxed">
+              <div className="space-y-8 text-xl text-white/50 font-light leading-relaxed max-w-lg">
                 <p>
                   Trace does not just aggregate your past actions. It builds a
                   forward-looking behavioral model based on your specific
@@ -66,52 +79,45 @@ export function IntelligenceSection() {
             </motion.div>
           </div>
 
-          {/* Right Column: Visual breakdown */}
-          <div className="lg:col-span-7 flex items-center">
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-px bg-black/10 border border-black/10">
-              {modelComponents.map((item, i) => (
-                <motion.article
-                  key={item.id}
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.8, delay: 0.2 + i * 0.1 }}
-                  className="bg-white p-8 aspect-square flex flex-col"
-                  aria-label={`Model component ${item.id}: ${item.title}`}
-                >
-                  <div className="text-xs font-bold uppercase tracking-widest text-black/30 mb-auto">
-                    Model Component {item.id}
-                  </div>
-                  <h3 className="text-2xl font-medium mb-3">{item.title}</h3>
-                  <p className="text-black/60 text-sm leading-relaxed">
-                    {item.description}
-                  </p>
-                </motion.article>
-              ))}
-
-              {/* System Status card */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+          {/* Right Column: Editorial Text Blocks (replaces SaaS cards) */}
+          <div className="flex flex-col justify-center gap-16 lg:pl-12">
+            {modelComponents.map((item, i) => (
+              <motion.article
+                key={item.id}
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, delay: 0.5 }}
-                className="bg-[#0a0a0a] text-white p-8 aspect-square flex flex-col justify-between"
-                aria-label="System status: Gemini Core active"
+                transition={{ duration: 1, delay: i * 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className="relative pl-8 border-l border-white/10"
+                aria-label={`Model component ${item.id}: ${item.title}`}
               >
-                <div className="text-xs font-bold uppercase tracking-widest text-white/30">
-                  System Status
+                <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30 mb-4">
+                  {item.id}
                 </div>
-                <div>
-                  <div
-                    className="text-emerald-400 mb-2 font-mono text-sm"
-                    aria-live="polite"
-                  >
-                    OS.ACTIVE
-                  </div>
-                  <h3 className="text-2xl font-medium">Gemini Core</h3>
-                </div>
-              </motion.div>
-            </div>
+                <h3 className="text-2xl font-medium tracking-tight mb-3 text-white/90">{item.title}</h3>
+                <p className="text-white/40 text-lg font-light leading-relaxed">
+                  {item.description}
+                </p>
+              </motion.article>
+            ))}
+
+            {/* System Status */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-8 inline-flex items-center gap-4 px-6 py-4 rounded-full border border-white/10 bg-white/5 backdrop-blur-md self-start"
+              aria-label="System status: Gemini Core active"
+            >
+              <div
+                className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"
+                aria-hidden="true"
+              />
+              <span className="text-xs font-mono text-white/70 uppercase tracking-widest">
+                OS.ACTIVE // Gemini Core
+              </span>
+            </motion.div>
           </div>
         </div>
       </div>
