@@ -10,7 +10,7 @@ test.describe('Authentication Flows', () => {
     // Verify main form elements
     const emailInput = page.getByPlaceholder(/operator@trace.network/i);
     const passwordInput = page.getByPlaceholder(/••••••••••••/i);
-    const submitButton = page.getByRole('button', { name: /Authenticate/i });
+    const submitButton = page.getByRole('button', { name: /Initialize Connection/i });
 
     await expect(emailInput).toBeVisible();
     await expect(passwordInput).toBeVisible();
@@ -29,6 +29,6 @@ test.describe('Authentication Flows', () => {
     
     await expect(page.getByPlaceholder(/Jane Smith/i)).toBeVisible();
     await expect(page.getByPlaceholder(/operator@trace.network/i)).toBeVisible();
-    await expect(page.getByRole('button', { name: /Initialize Node/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Deploy Node/i })).toBeVisible();
   });
 });
