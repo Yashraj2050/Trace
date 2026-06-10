@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { LogOut, Activity, Hexagon, Zap, Shield, FileTerminal } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Profile",
+  description: "Manage your Trace account, sustainability score, and personal settings.",
+};
 
 export default async function ProfilePage() {
   const supabase = await createClient();

@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { InsightCard } from "@/components/dashboard/insight-card";
 import { TrendingDown, Activity, Zap, ShieldAlert } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
+
+export const metadata: Metadata = {
+  title: "Insights",
+  description: "View your AI-powered behavioral insights and carbon reduction recommendations.",
+};
 
 export default async function InsightsPage() {
   const supabase = await createClient();
