@@ -3,20 +3,18 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Leaf, ArrowRight, ArrowLeft, Check, Car, Home, Utensils, ShoppingBag, Plane } from "lucide-react";
+import { ArrowRight, ArrowLeft, Car, Home, Utensils, ShoppingBag, Plane, Hexagon } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 const steps = [
-  { id: "transport", title: "How do you get around?", icon: Car, color: "from-blue-500 to-cyan-500" },
-  { id: "energy", title: "Your home energy use", icon: Home, color: "from-emerald-500 to-teal-500" },
-  { id: "food", title: "Your diet & food choices", icon: Utensils, color: "from-orange-500 to-amber-500" },
-  { id: "shopping", title: "Shopping & consumption", icon: ShoppingBag, color: "from-violet-500 to-purple-500" },
-  { id: "travel", title: "Travel & flights", icon: Plane, color: "from-pink-500 to-rose-500" },
+  { id: "transport", title: "Transport Vector", icon: Car },
+  { id: "energy", title: "Energy Profile", icon: Home },
+  { id: "food", title: "Dietary Input", icon: Utensils },
+  { id: "shopping", title: "Consumption Matrix", icon: ShoppingBag },
+  { id: "travel", title: "Aviation Telemetry", icon: Plane },
 ];
 
 type OnboardingData = {
@@ -27,41 +25,41 @@ type OnboardingData = {
   flightsPerYear: string;
 };
 
-const stepOptions: Record<string, { label: string; value: string; carbonKg: number }[]> = {
+const stepOptions: Record<string, { label: string; value: string; carbonKg: number; desc: string }[]> = {
   transport: [
-    { label: "🚗 Private car daily", value: "car_daily", carbonKg: 2400 },
-    { label: "🚌 Public transit mostly", value: "public_transit", carbonKg: 800 },
-    { label: "🚲 Bike / walk", value: "bike_walk", carbonKg: 50 },
-    { label: "🚗 Car occasionally", value: "car_occasional", carbonKg: 1200 },
-    { label: "⚡ Electric vehicle", value: "ev", carbonKg: 600 },
+    { label: "Internal Combustion Engine", value: "car_daily", carbonKg: 2400, desc: "Private car daily use" },
+    { label: "Public Transit Network", value: "public_transit", carbonKg: 800, desc: "Bus, train, subway mostly" },
+    { label: "Kinetic / Non-Motorized", value: "bike_walk", carbonKg: 50, desc: "Bike or walk primarily" },
+    { label: "Mixed Transport", value: "car_occasional", carbonKg: 1200, desc: "Occasional car use" },
+    { label: "Electric Vehicle", value: "ev", carbonKg: 600, desc: "Battery-powered primary" },
   ],
   energySource: [
-    { label: "🔥 Natural gas", value: "gas", carbonKg: 1800 },
-    { label: "☀️ Solar panels", value: "solar", carbonKg: 150 },
-    { label: "⚡ Grid electricity", value: "grid", carbonKg: 1200 },
-    { label: "💨 Wind / renewables", value: "renewables", carbonKg: 200 },
-    { label: "🏠 Mixed sources", value: "mixed", carbonKg: 900 },
+    { label: "Fossil / Natural Gas", value: "gas", carbonKg: 1800, desc: "Gas heating & grid" },
+    { label: "Direct Solar", value: "solar", carbonKg: 150, desc: "Home solar panels" },
+    { label: "Standard Grid", value: "grid", carbonKg: 1200, desc: "Standard electricity mix" },
+    { label: "100% Renewable Plan", value: "renewables", carbonKg: 200, desc: "Wind/solar grid provider" },
+    { label: "Mixed Sources", value: "mixed", carbonKg: 900, desc: "Grid + partial renewables" },
   ],
   diet: [
-    { label: "🥩 Meat at every meal", value: "meat_heavy", carbonKg: 3300 },
-    { label: "🍗 Meat a few times/week", value: "meat_moderate", carbonKg: 1900 },
-    { label: "🐟 Pescatarian", value: "pescatarian", carbonKg: 1200 },
-    { label: "🥗 Vegetarian", value: "vegetarian", carbonKg: 800 },
-    { label: "🌱 Vegan", value: "vegan", carbonKg: 500 },
+    { label: "High-Impact Omnivore", value: "meat_heavy", carbonKg: 3300, desc: "Meat at every meal" },
+    { label: "Moderate Omnivore", value: "meat_moderate", carbonKg: 1900, desc: "Meat a few times/week" },
+    { label: "Pescatarian", value: "pescatarian", carbonKg: 1200, desc: "Fish and dairy, no meat" },
+    { label: "Vegetarian", value: "vegetarian", carbonKg: 800, desc: "Dairy and eggs only" },
+    { label: "Plant-Based (Vegan)", value: "vegan", carbonKg: 500, desc: "No animal products" },
   ],
   shoppingHabits: [
-    { label: "🛍️ Shop frequently (luxury)", value: "luxury", carbonKg: 2000 },
-    { label: "👔 Buy new clothes often", value: "fashion", carbonKg: 1200 },
-    { label: "♻️ Mostly secondhand", value: "secondhand", carbonKg: 400 },
-    { label: "🌿 Minimal, eco-conscious", value: "minimal", carbonKg: 300 },
-    { label: "📦 Average consumer", value: "average", carbonKg: 800 },
+    { label: "High Frequency", value: "luxury", carbonKg: 2000, desc: "Frequent luxury/new items" },
+    { label: "Fast Fashion", value: "fashion", carbonKg: 1200, desc: "Buy new clothes often" },
+    { label: "Circular Economy", value: "secondhand", carbonKg: 400, desc: "Mostly secondhand" },
+    { label: "Minimalist", value: "minimal", carbonKg: 300, desc: "Eco-conscious, rare buys" },
+    { label: "Standard Consumer", value: "average", carbonKg: 800, desc: "Average consumption" },
   ],
   flightsPerYear: [
-    { label: "✈️ 0 flights", value: "none", carbonKg: 0 },
-    { label: "✈️ 1-2 short flights", value: "few_short", carbonKg: 600 },
-    { label: "✈️ 1-2 long-haul flights", value: "few_long", carbonKg: 2000 },
-    { label: "✈️ 3-5 flights", value: "several", carbonKg: 3000 },
-    { label: "✈️ 6+ flights (frequent flyer)", value: "frequent", carbonKg: 5000 },
+    { label: "Zero Aviation", value: "none", carbonKg: 0, desc: "No flights this year" },
+    { label: "Low Frequency", value: "few_short", carbonKg: 600, desc: "1-2 short haul flights" },
+    { label: "Long Haul Low", value: "few_long", carbonKg: 2000, desc: "1-2 long haul flights" },
+    { label: "Medium Frequency", value: "several", carbonKg: 3000, desc: "3-5 flights total" },
+    { label: "High Frequency", value: "frequent", carbonKg: 5000, desc: "6+ flights annually" },
   ],
 };
 
@@ -110,7 +108,6 @@ export default function OnboardingPage() {
         return;
       }
 
-      // Calculate total carbon footprint
       const totalCarbon = stepKeys.reduce((sum, key) => {
         const val = selections[key as keyof OnboardingData];
         const opts = stepOptions[key];
@@ -118,20 +115,19 @@ export default function OnboardingPage() {
         return sum + (opt?.carbonKg || 0);
       }, 0);
 
-      // Update profile
       const updateData = {
         onboarding_completed: true,
         total_carbon_kg: totalCarbon,
         carbon_goal_kg: Math.round(totalCarbon * 0.7),
         sustainability_score: Math.max(0, 100 - Math.round(totalCarbon / 100)),
       };
+      
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await (supabase as any)
         .from("profiles")
         .update(updateData)
         .eq("id", user.id);
 
-      // Store carbon entries for each category
       const entries = [
         { category: "transport" as const, carbon_kg: stepOptions.transport.find((o) => o.value === selections.transport)?.carbonKg || 0 },
         { category: "energy" as const, carbon_kg: stepOptions.energySource.find((o) => o.value === selections.energySource)?.carbonKg || 0 },
@@ -144,155 +140,134 @@ export default function OnboardingPage() {
       const insertData: any = entries.map((e) => ({
         user_id: user.id,
         category: e.category,
-        carbon_kg: e.carbon_kg / 365, // daily average
+        carbon_kg: e.carbon_kg / 365,
         date: new Date().toISOString().split("T")[0],
         source: "calculator" as const,
-        description: "Initial onboarding baseline",
+        description: "Initial baseline telemetry",
       }));
 
       await supabase.from("carbon_logs").insert(insertData);
 
-      toast.success("Profile set up! Welcome to Trace 🌿");
+      toast.success("Telemetry baseline established.");
       router.push("/dashboard");
     } catch {
-      toast.error("Failed to save. Please try again.");
+      toast.error("Failed to commit telemetry. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background relative">
-      <div className="absolute inset-0 bg-mesh grid-pattern" />
-      <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-emerald-500/8 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-teal-500/6 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative z-10 w-full max-w-lg mx-4">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
-        >
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <div className="relative w-32 h-12">
-              <Image src="/logo-light.png" alt="Trace Logo" fill className="object-contain block dark:hidden" priority />
-              <Image src="/logo-dark.png" alt="Trace Logo" fill className="object-contain hidden dark:block" priority />
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] text-white">
+      
+      <div className="w-full max-w-2xl flex flex-col md:flex-row min-h-[600px] border border-white/10 bg-[#0d0d0d] overflow-hidden">
+        
+        {/* Left Sidebar Info */}
+        <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-white/10 p-8 flex flex-col bg-[#111]">
+          <div className="mb-auto">
+            <div className="w-8 h-8 flex items-center justify-center bg-white/5 border border-white/10 mb-6">
+              <Hexagon className="w-4 h-4 text-emerald-400" />
             </div>
+            <h1 className="text-xl font-medium tracking-tight mb-2 uppercase">Configuration</h1>
+            <p className="text-xs text-white/50 font-mono">Establish initial telemetry baseline.</p>
           </div>
-          <h1 className="text-2xl font-bold mb-1">Set up your profile</h1>
-          <p className="text-sm text-muted-foreground">
-            Help us understand your lifestyle to give you personalized insights
-          </p>
-        </motion.div>
 
-        {/* Progress */}
-        <div className="mb-8">
-          <div className="flex justify-between text-xs text-muted-foreground mb-2">
-            <span>Step {currentStep + 1} of {steps.length}</span>
-            <span>{Math.round(((currentStep + 1) / steps.length) * 100)}% complete</span>
-          </div>
-          <Progress
-            value={((currentStep + 1) / steps.length) * 100}
-            className="h-2 bg-muted"
-          />
-        </div>
-
-        {/* Step Card */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentStep}
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -40 }}
-            transition={{ duration: 0.35, ease: "easeInOut" }}
-            className="glass-dark rounded-3xl p-8 border border-emerald-500/15 shadow-2xl"
-          >
-            {/* Step Header */}
-            <div className="flex items-center gap-4 mb-6">
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${step.color} p-0.5`}>
-                <div className="w-full h-full bg-background/80 rounded-[10px] flex items-center justify-center">
-                  <Icon className="w-6 h-6 text-white" />
+          <div className="mt-8">
+            <div className="text-[10px] font-mono tracking-widest text-white/40 uppercase mb-4">Sequence Progress</div>
+            <div className="flex flex-col gap-2">
+              {steps.map((s, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className={cn(
+                    "w-2 h-2 rounded-full transition-colors",
+                    i === currentStep ? "bg-emerald-400 animate-pulse" : i < currentStep ? "bg-white/40" : "bg-white/10"
+                  )} />
+                  <span className={cn(
+                    "text-xs font-mono uppercase transition-colors",
+                    i === currentStep ? "text-emerald-400" : i < currentStep ? "text-white/60" : "text-white/30"
+                  )}>
+                    {s.title.split(" ")[0]}
+                  </span>
                 </div>
-              </div>
-              <h2 className="text-xl font-bold">{step.title}</h2>
-            </div>
-
-            {/* Options */}
-            <div className="space-y-3">
-              {currentOptions.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => handleSelect(option.value)}
-                  className={cn(
-                    "w-full text-left px-4 py-3.5 rounded-xl border transition-all duration-200 text-sm font-medium",
-                    currentValue === option.value
-                      ? "border-emerald-500 bg-emerald-500/15 text-emerald-300"
-                      : "border-border/50 hover:border-emerald-500/30 hover:bg-emerald-500/5 text-foreground"
-                  )}
-                >
-                  <div className="flex items-center justify-between">
-                    <span>{option.label}</span>
-                    {currentValue === option.value && (
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center"
-                      >
-                        <Check className="w-3 h-3 text-white" />
-                      </motion.div>
-                    )}
-                  </div>
-                </button>
               ))}
             </div>
+          </div>
+        </div>
 
-            {/* Navigation */}
-            <div className="flex gap-3 mt-8">
-              {currentStep > 0 && (
-                <Button
-                  variant="outline"
-                  onClick={() => setCurrentStep((s) => s - 1)}
-                  className="flex-1 rounded-xl border-border/50 h-11"
-                >
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back
-                </Button>
-              )}
+        {/* Right Form Area */}
+        <div className="w-full md:w-2/3 p-8 flex flex-col">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="flex-1 flex flex-col"
+            >
+              <div className="flex items-center gap-3 mb-8 pb-4 border-b border-white/10">
+                <Icon className="w-5 h-5 text-white/70" />
+                <h2 className="text-2xl font-medium tracking-tight">{step.title}</h2>
+              </div>
+
+              <div className="space-y-3 flex-1">
+                {currentOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => handleSelect(option.value)}
+                    className={cn(
+                      "w-full text-left px-5 py-4 border transition-all duration-200 flex items-center justify-between group",
+                      currentValue === option.value
+                        ? "border-emerald-400/50 bg-emerald-400/5"
+                        : "border-white/10 hover:border-white/30 hover:bg-white/5"
+                    )}
+                  >
+                    <div>
+                      <div className={cn(
+                        "text-sm font-medium transition-colors mb-1",
+                        currentValue === option.value ? "text-emerald-400" : "text-white"
+                      )}>
+                        {option.label}
+                      </div>
+                      <div className="text-xs text-white/40 font-mono">
+                        {option.desc}
+                      </div>
+                    </div>
+                    <div className={cn(
+                      "w-4 h-4 border flex items-center justify-center transition-colors",
+                      currentValue === option.value ? "border-emerald-400" : "border-white/20 group-hover:border-white/40"
+                    )}>
+                      {currentValue === option.value && <div className="w-2 h-2 bg-emerald-400" />}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Navigation */}
+          <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/10">
+            {currentStep > 0 ? (
               <Button
-                onClick={handleNext}
-                disabled={!canProceed || loading}
-                className={cn(
-                  "flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold h-11 rounded-xl glow-green-sm transition-all duration-300",
-                  !canProceed && "opacity-50 cursor-not-allowed"
-                )}
+                variant="ghost"
+                onClick={() => setCurrentStep((s) => s - 1)}
+                className="text-xs font-mono uppercase tracking-widest text-white/50 hover:text-white"
               >
-                {currentStep === steps.length - 1
-                  ? loading ? "Saving..." : "Complete Setup"
-                  : "Next Step"}
-                {currentStep < steps.length - 1 && <ArrowRight className="w-4 h-4 ml-2" />}
+                <ArrowLeft className="w-3 h-3 mr-2" />
+                Reverse
               </Button>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Step indicators */}
-        <div className="flex justify-center gap-2 mt-6">
-          {steps.map((_, i) => (
-            <div
-              key={i}
-              className={cn(
-                "h-1.5 rounded-full transition-all duration-300",
-                i === currentStep
-                  ? "w-8 bg-emerald-500"
-                  : i < currentStep
-                  ? "w-4 bg-emerald-500/50"
-                  : "w-4 bg-muted"
-              )}
-            />
-          ))}
+            ) : <div />}
+            
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed || loading}
+              className="bg-white text-black hover:bg-white/90 text-xs font-mono uppercase tracking-widest h-10 px-6 disabled:opacity-50"
+            >
+              {currentStep === steps.length - 1
+                ? loading ? "Committing..." : "Initialize OS"
+                : "Proceed"}
+              {currentStep < steps.length - 1 && <ArrowRight className="w-3 h-3 ml-2" />}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

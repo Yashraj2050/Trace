@@ -7,24 +7,16 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Leaf, Mail, Lock, User, Eye, EyeOff, Loader2, ArrowLeft, Check } from "lucide-react";
+import { Mail, User, Lock, ArrowLeft, Hexagon } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
-
-const passwordRequirements = [
-  { label: "At least 8 characters", test: (p: string) => p.length >= 8 },
-  { label: "Contains a number", test: (p: string) => /\d/.test(p) },
-  { label: "Contains uppercase letter", test: (p: string) => /[A-Z]/.test(p) },
-];
 
 export default function SignupPage() {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showRequirements, setShowRequirements] = useState(false);
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,9 +33,8 @@ export default function SignupPage() {
       });
 
       if (error) {
-        // Handle specific supabase errors if it didn't throw
         if (error.message.includes("Failed to fetch")) {
-          toast.error("Database unavailable. Let's set up your offline demo profile 🌱");
+          toast.error("Database offline. Initializing local demo node.");
           router.push("/onboarding");
           return;
         }
@@ -51,171 +42,110 @@ export default function SignupPage() {
         return;
       }
 
-      toast.success("Account created! Let's set up your profile 🌱");
+      toast.success("Node initialized. Proceeding to configuration.");
       router.push("/onboarding");
       router.refresh();
     } catch {
-      toast.error("Database unavailable. Let's set up your offline demo profile 🌱");
+      toast.error("Database offline. Initializing local demo node.");
       router.push("/onboarding");
     } finally {
       setLoading(false);
     }
   };
 
-  const passwordStrength = passwordRequirements.filter((r) => r.test(password)).length;
-
   return (
-    <div className="min-h-screen flex items-center justify-center relative bg-background">
-      <div className="absolute inset-0 bg-mesh grid-pattern" />
-      <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-emerald-500/8 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-teal-500/6 rounded-full blur-3xl" />
-
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] text-white">
       <Link
         href="/"
-        className="absolute top-6 left-6 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        className="absolute top-8 left-8 flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        Back to home
+        Back
       </Link>
 
       <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="relative z-10 w-full max-w-md mx-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-sm mx-4"
       >
-        <div className="glass-dark rounded-3xl p-8 border border-emerald-500/15 shadow-2xl">
-          <div className="text-center mb-8">
-            <div className="w-14 h-14 bg-emerald-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Leaf className="w-7 h-7 text-emerald-400" />
+        <div className="flex flex-col mb-12">
+          <div className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center mb-6 rounded-md">
+            <Hexagon className="w-6 h-6 text-white" />
+          </div>
+          <h1 className="text-4xl font-medium tracking-tight mb-2">Create node.</h1>
+          <p className="text-white/50 text-sm">Deploy Trace for your personal telemetry.</p>
+        </div>
+
+        <form onSubmit={handleSignup} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-xs font-medium uppercase tracking-widest text-white/50">
+              Identifier (Full Name)
+            </Label>
+            <div className="relative">
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+              <Input
+                id="name"
+                type="text"
+                placeholder="Jane Smith"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="pl-10 bg-[#111] border-white/10 text-white placeholder:text-white/20 h-12 rounded-md focus:border-white/30 focus:ring-0"
+                required
+              />
             </div>
-            <h1 className="text-2xl font-bold mb-1">Create your account</h1>
-            <p className="text-sm text-muted-foreground">
-              Start your sustainability journey today
-            </p>
           </div>
 
-          <form onSubmit={handleSignup} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full name</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Jane Smith"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  className="pl-10 bg-background/50 border-border/50 focus:border-emerald-500/50 rounded-xl h-11"
-                  required
-                />
-              </div>
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-xs font-medium uppercase tracking-widest text-white/50">
+              Email
+            </Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+              <Input
+                id="email"
+                type="email"
+                placeholder="node@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="pl-10 bg-[#111] border-white/10 text-white placeholder:text-white/20 h-12 rounded-md focus:border-white/30 focus:ring-0"
+                required
+              />
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 bg-background/50 border-border/50 focus:border-emerald-500/50 rounded-xl h-11"
-                  required
-                />
-              </div>
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-xs font-medium uppercase tracking-widest text-white/50">
+              Secure Passkey
+            </Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pl-10 bg-[#111] border-white/10 text-white placeholder:text-white/20 h-12 rounded-md focus:border-white/30 focus:ring-0"
+                required
+                minLength={8}
+              />
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onFocus={() => setShowRequirements(true)}
-                  className="pl-10 pr-10 bg-background/50 border-border/50 focus:border-emerald-500/50 rounded-xl h-11"
-                  required
-                  minLength={8}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
+          <Button
+            type="submit"
+            className="w-full h-12 bg-white text-black hover:bg-white/90 rounded-md font-medium text-sm transition-colors mt-2"
+            disabled={loading || password.length < 8}
+          >
+            {loading ? "Deploying..." : "Deploy Node"}
+          </Button>
+        </form>
 
-              {/* Password strength */}
-              {showRequirements && password && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  className="space-y-1.5"
-                >
-                  <div className="flex gap-1">
-                    {[1, 2, 3].map((level) => (
-                      <div
-                        key={level}
-                        className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                          passwordStrength >= level
-                            ? level === 1
-                              ? "bg-red-500"
-                              : level === 2
-                              ? "bg-yellow-500"
-                              : "bg-emerald-500"
-                            : "bg-muted"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  {passwordRequirements.map((req) => (
-                    <div key={req.label} className="flex items-center gap-2 text-xs">
-                      <div
-                        className={`w-3.5 h-3.5 rounded-full flex items-center justify-center ${
-                          req.test(password) ? "bg-emerald-500" : "bg-muted"
-                        }`}
-                      >
-                        {req.test(password) && <Check className="w-2 h-2 text-white" />}
-                      </div>
-                      <span className={req.test(password) ? "text-emerald-400" : "text-muted-foreground"}>
-                        {req.label}
-                      </span>
-                    </div>
-                  ))}
-                </motion.div>
-              )}
-            </div>
-
-            <Button
-              type="submit"
-              disabled={loading || passwordStrength < 2}
-              className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold h-11 rounded-xl glow-green-sm mt-2 transition-all duration-300 disabled:opacity-50"
-            >
-              {loading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                "Create Account"
-              )}
-            </Button>
-          </form>
-
-          <p className="text-center text-xs text-muted-foreground mt-4">
-            By signing up, you agree to our{" "}
-            <Link href="#" className="text-emerald-400 hover:underline">Terms</Link>{" "}
-            and{" "}
-            <Link href="#" className="text-emerald-400 hover:underline">Privacy Policy</Link>
-          </p>
-
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            Already have an account?{" "}
-            <Link href="/login" className="text-emerald-400 hover:text-emerald-300 font-medium transition-colors">
+        <div className="mt-8 pt-8 border-t border-white/10 text-center">
+          <p className="text-sm text-white/50">
+            Node already deployed?{" "}
+            <Link href="/login" className="text-white hover:underline underline-offset-4 transition-colors">
               Sign in
             </Link>
           </p>

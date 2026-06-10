@@ -1,6 +1,5 @@
 import { InsightCard } from "@/components/dashboard/insight-card";
-import { ArrowLeft, TrendingDown, Leaf, Zap, Award } from "lucide-react";
-import Link from "next/link";
+import { TrendingDown, Activity, Zap, ShieldAlert } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function InsightsPage() {
@@ -14,94 +13,104 @@ export default async function InsightsPage() {
     .order("created_at", { ascending: false });
 
   const logs = rawLogs as { carbon_kg: number; category: string }[] | null;
-
   const totalCarbon = (logs || []).reduce((acc, log) => acc + log.carbon_kg, 0);
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="space-y-4">
-        <Link href="/dashboard" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Dashboard
-        </Link>
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Insights & Trends</h1>
-          <p className="text-muted-foreground font-medium mt-1">Deep dive into your environmental impact.</p>
-        </div>
-      </header>
-
-      {/* Hero Insight */}
-      <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-3xl p-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl"></div>
-        <div className="relative z-10 flex items-start gap-4">
-          <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
-            <TrendingDown className="w-6 h-6 text-emerald-600" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-foreground mb-2">You&apos;re trending downwards!</h2>
-            <p className="text-foreground/80 leading-relaxed max-w-xl">
-              Your carbon footprint this week is <span className="font-bold text-emerald-600">14% lower</span> than your historical average. 
-              The biggest reduction came from your Transport category after you logged 3 public transit commutes.
-            </p>
-          </div>
-        </div>
+    <div className="w-full pointer-events-auto">
+      
+      <div className="border-b border-white/10 pb-6 mb-8">
+        <h1 className="text-4xl font-medium tracking-tight mb-2">Behavioral Intelligence</h1>
+        <p className="text-sm font-mono text-white/50 uppercase tracking-widest">Report _0x1A</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Weekly Breakdown Placeholder */}
-        <div className="bg-card border border-border rounded-3xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Zap className="w-5 h-5 text-primary" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        {/* Left Column: Narrative/Editorial */}
+        <div className="lg:col-span-7 space-y-8">
+          
+          <div className="bg-[#111] border border-emerald-400/20 p-8 relative overflow-hidden">
+            <div className="flex items-center gap-3 mb-6 border-b border-emerald-400/20 pb-4">
+              <TrendingDown className="w-5 h-5 text-emerald-400" />
+              <h2 className="text-sm font-mono uppercase tracking-widest text-emerald-400">Trajectory: Optimal</h2>
             </div>
-            <h3 className="font-semibold text-lg">Weekly Breakdown</h3>
+            
+            <p className="text-lg text-white/80 leading-relaxed font-light mb-6">
+              Your carbon footprint this week demonstrates a structural shift in consumption. 
+              Telemetry indicates a <span className="font-medium text-emerald-400">14% reduction</span> compared to your historical baseline.
+            </p>
+            
+            <div className="pl-4 border-l-2 border-emerald-400/50 text-white/60 text-sm font-mono leading-relaxed">
+              &quot;The most significant variance was detected in the Transport vector following 3 consecutive public transit logs.&quot;
+            </div>
           </div>
-          <div className="space-y-4">
-            <div>
-              <div className="flex justify-between text-sm mb-1 font-medium">
-                <span>Food</span>
-                <span>{(totalCarbon * 0.4).toFixed(1)} kg</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div className="bg-orange-500 h-2 rounded-full" style={{ width: '40%' }}></div>
-              </div>
+
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <ShieldAlert className="w-4 h-4 text-white/50" />
+              <h3 className="text-sm font-mono uppercase tracking-widest text-white/50">Calculated Vectors</h3>
             </div>
-            <div>
-              <div className="flex justify-between text-sm mb-1 font-medium">
-                <span>Transport</span>
-                <span>{(totalCarbon * 0.35).toFixed(1)} kg</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div className="bg-blue-500 h-2 rounded-full" style={{ width: '35%' }}></div>
-              </div>
-            </div>
-            <div>
-              <div className="flex justify-between text-sm mb-1 font-medium">
-                <span>Energy</span>
-                <span>{(totalCarbon * 0.25).toFixed(1)} kg</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div className="bg-yellow-500 h-2 rounded-full" style={{ width: '25%' }}></div>
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <InsightCard 
+                title="Grid Optimization" 
+                text="Energy consumption constitutes 25% of current footprint. Shifting to a renewable tariff eliminates this vector entirely." 
+                actionLabel="Commit"
+              />
+              <InsightCard 
+                title="Supply Chain" 
+                text="4 retail anomalies detected. Deploying reusable transport items (bags) reduces plastic telemetry by 1.2kg." 
+                actionLabel="Commit"
+              />
             </div>
           </div>
         </div>
 
-        {/* Personalized Actions */}
-        <div className="space-y-6">
-          <h3 className="font-semibold text-lg flex items-center gap-2">
-            <Award className="w-5 h-5 text-emerald-500" /> Recommended Actions
-          </h3>
-          <InsightCard 
-            title="Switch to Renewable" 
-            text="Your energy consumption makes up 25% of your footprint. Switching to a green energy tariff can eliminate this entirely." 
-            actionLabel="Commit to Green Tariff"
-          />
-          <InsightCard 
-            title="Zero-Waste Grocery" 
-            text="You logged 4 supermarket trips this week. Bring your own bags and buy bulk to save ~1.2 kg CO₂ next week." 
-            actionLabel="Commit to Zero-Waste"
-          />
+        {/* Right Column: Hard Data */}
+        <div className="lg:col-span-5">
+          <div className="border border-white/10 bg-[#0d0d0d] p-6 h-full">
+            <div className="flex items-center gap-3 mb-8 pb-4 border-b border-white/10">
+              <Activity className="w-4 h-4 text-white/50" />
+              <h3 className="text-sm font-mono uppercase tracking-widest text-white/50">Vector Breakdown</h3>
+            </div>
+
+            <div className="space-y-8">
+              <div>
+                <div className="flex justify-between text-xs font-mono uppercase tracking-widest mb-2">
+                  <span className="text-white/70">Food</span>
+                  <span className="text-white">{(totalCarbon * 0.4).toFixed(1)} kg</span>
+                </div>
+                <div className="w-full bg-white/5 h-1">
+                  <div className="bg-white/80 h-1" style={{ width: '40%' }}></div>
+                </div>
+              </div>
+              
+              <div>
+                <div className="flex justify-between text-xs font-mono uppercase tracking-widest mb-2">
+                  <span className="text-white/70">Transport</span>
+                  <span className="text-white">{(totalCarbon * 0.35).toFixed(1)} kg</span>
+                </div>
+                <div className="w-full bg-white/5 h-1">
+                  <div className="bg-white/60 h-1" style={{ width: '35%' }}></div>
+                </div>
+              </div>
+              
+              <div>
+                <div className="flex justify-between text-xs font-mono uppercase tracking-widest mb-2">
+                  <span className="text-white/70">Energy</span>
+                  <span className="text-white">{(totalCarbon * 0.25).toFixed(1)} kg</span>
+                </div>
+                <div className="w-full bg-white/5 h-1">
+                  <div className="bg-white/40 h-1" style={{ width: '25%' }}></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-12 p-4 bg-white/5 border border-white/10 flex items-center gap-3 text-xs font-mono text-white/50">
+              <Zap className="w-3 h-3 text-yellow-500" />
+              System automatically aggregates external telemetry.
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   );

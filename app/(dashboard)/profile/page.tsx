@@ -1,8 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { LogOut, Award, Zap, Shield, ArrowLeft } from "lucide-react";
-import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogOut, Activity, Hexagon, Zap, Shield, FileTerminal } from "lucide-react";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -24,72 +22,102 @@ export default async function ProfilePage() {
   const initials = fullName.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2);
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header className="space-y-4">
-        <Link href="/dashboard" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors md:hidden">
-          <ArrowLeft className="w-4 h-4 mr-2" /> Back
-        </Link>
+    <div className="w-full pointer-events-auto">
+      
+      <div className="border-b border-white/10 pb-6 mb-8 flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Profile</h1>
-          <p className="text-muted-foreground font-medium mt-1">Manage your account and view achievements.</p>
+          <h1 className="text-4xl font-medium tracking-tight mb-2">Node Identity</h1>
+          <p className="text-sm font-mono text-white/50 uppercase tracking-widest">Operator Profile</p>
         </div>
-      </header>
-
-      {/* Profile Header Card */}
-      <div className="bg-card border border-border rounded-3xl p-8 shadow-sm flex flex-col md:flex-row items-center gap-8">
-        <Avatar className="w-24 h-24 ring-4 ring-emerald-500/20">
-          <AvatarImage src={user.user_metadata?.avatar_url} />
-          <AvatarFallback className="bg-emerald-500/10 text-emerald-600 text-3xl font-bold">
-            {initials}
-          </AvatarFallback>
-        </Avatar>
-        <div className="text-center md:text-left flex-1">
-          <h2 className="text-2xl font-bold text-foreground">{fullName}</h2>
-          <p className="text-muted-foreground mb-4">{user.email}</p>
-          <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
-            <div className="flex items-center gap-2 bg-emerald-500/10 px-4 py-2 rounded-full">
-              <Zap className="w-4 h-4 text-emerald-500" />
-              <span className="font-semibold text-emerald-600 text-sm">Score: {profile?.sustainability_score || 0}</span>
-            </div>
-            <div className="flex items-center gap-2 bg-orange-500/10 px-4 py-2 rounded-full">
-              <span className="font-semibold text-orange-600 text-sm">🔥 {profile?.streak_days || 0} Day Streak</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Achievements Summary */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-bold tracking-tight">Recent Achievements</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="p-5 border border-border bg-card rounded-3xl flex items-start gap-4">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center shrink-0">
-              <Shield className="w-6 h-6 text-primary" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground">Zero-Waste Beginner</h4>
-              <p className="text-xs text-muted-foreground mt-1">Logged first 5 eco-friendly meals.</p>
-            </div>
-          </div>
-          <div className="p-5 border border-border bg-card rounded-3xl flex items-start gap-4">
-            <div className="w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center shrink-0">
-              <Award className="w-6 h-6 text-blue-500" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-foreground">Transit Champion</h4>
-              <p className="text-xs text-muted-foreground mt-1">Saved 50kg CO₂ using public transit.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Account Actions */}
-      <div className="pt-6 border-t border-border">
         <form action="/auth/signout" method="post">
-          <button type="submit" className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3 bg-destructive/10 text-destructive hover:bg-destructive/20 font-semibold rounded-full transition-colors">
-            <LogOut className="w-5 h-5" /> Sign Out
+          <button type="submit" className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-red-400 border border-red-400/20 bg-red-400/5 px-4 py-2 hover:bg-red-400/10 transition-colors">
+            <LogOut className="w-3 h-3" /> Terminate Session
           </button>
         </form>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+        
+        {/* Identity Block */}
+        <div className="md:col-span-5 flex flex-col gap-8">
+          <div className="border border-white/10 bg-[#111] p-8 flex flex-col">
+            <div className="w-20 h-20 mb-8 border border-white/20 bg-white/5 flex items-center justify-center">
+              <span className="text-2xl font-mono text-white">{initials}</span>
+            </div>
+            
+            <h2 className="text-2xl font-medium tracking-tight mb-1">{fullName}</h2>
+            <p className="text-sm font-mono text-white/40 mb-8">{user.email}</p>
+
+            <div className="space-y-4 pt-6 border-t border-white/10">
+              <div className="flex justify-between items-center text-sm font-mono uppercase tracking-widest">
+                <span className="text-white/50">Status</span>
+                <span className="text-emerald-400 flex items-center gap-2"><div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Active Node</span>
+              </div>
+              <div className="flex justify-between items-center text-sm font-mono uppercase tracking-widest">
+                <span className="text-white/50">Auth Level</span>
+                <span className="text-white">Operator</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="border border-white/10 bg-[#0d0d0d] p-6">
+             <div className="flex items-center gap-2 mb-6">
+               <FileTerminal className="w-4 h-4 text-white/50" />
+               <h3 className="text-xs font-mono uppercase tracking-widest text-white/50">System Logs</h3>
+             </div>
+             <p className="text-xs font-mono text-white/30 leading-relaxed uppercase">
+               Last Login: {new Date().toISOString().split("T")[0]}<br/>
+               IP Hash: A1F9.C4E2<br/>
+               Telemetry Sync: OK
+             </p>
+          </div>
+        </div>
+
+        {/* Metrics & Milestones */}
+        <div className="md:col-span-7 flex flex-col gap-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="border border-emerald-400/20 bg-emerald-400/5 p-6 flex flex-col justify-between h-40">
+              <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-emerald-400 mb-4">
+                <Activity className="w-3 h-3" /> OS Score
+              </div>
+              <p className="text-5xl font-medium tracking-tight">{profile?.sustainability_score || 0}</p>
+            </div>
+            
+            <div className="border border-orange-500/20 bg-orange-500/5 p-6 flex flex-col justify-between h-40">
+              <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-orange-500 mb-4">
+                <Zap className="w-3 h-3" /> Streak
+              </div>
+              <p className="text-5xl font-medium tracking-tight text-orange-500">{profile?.streak_days || 0}</p>
+            </div>
+          </div>
+
+          <div className="border border-white/10 bg-[#111] p-8 flex-1">
+            <h3 className="text-sm font-mono uppercase tracking-widest text-white/50 mb-8 border-b border-white/10 pb-4">Operational Milestones</h3>
+            
+            <div className="space-y-6">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 border border-emerald-400/30 bg-emerald-400/10 flex items-center justify-center shrink-0">
+                  <Shield className="w-4 h-4 text-emerald-400" />
+                </div>
+                <div>
+                  <h4 className="font-mono text-sm tracking-widest uppercase text-white/90 mb-1">Baseline Established</h4>
+                  <p className="text-xs text-white/40 uppercase font-mono leading-relaxed">Initial telemetry configuration completed successfully.</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 border border-white/20 bg-white/5 flex items-center justify-center shrink-0">
+                  <Hexagon className="w-4 h-4 text-white/50" />
+                </div>
+                <div>
+                  <h4 className="font-mono text-sm tracking-widest uppercase text-white/90 mb-1">Transit Optimization</h4>
+                  <p className="text-xs text-white/40 uppercase font-mono leading-relaxed">Logged 5 sequential public transit usages.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

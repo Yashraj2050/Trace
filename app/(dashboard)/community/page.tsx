@@ -1,126 +1,128 @@
 "use client";
 
-import { Trophy, Flame, Target, Users, Heart } from "lucide-react";
+import { Flame, Target, Share2, Hexagon, Terminal } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 export default function CommunityPage() {
   return (
-    <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <header>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Community & Quests</h1>
-        <p className="text-muted-foreground mt-1 text-sm font-medium">Join friends, maintain streaks, and complete challenges.</p>
-      </header>
-
-      {/* Your Streaks */}
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold tracking-tight">Your Streaks</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-card border border-border rounded-3xl p-6 shadow-sm flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-orange-500/10 flex items-center justify-center shrink-0">
-              <Flame className="w-6 h-6 text-orange-500" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Logging Streak</p>
-              <p className="text-2xl font-bold text-foreground">12 Days</p>
-            </div>
-          </div>
-          <div className="bg-card border border-border rounded-3xl p-6 shadow-sm flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-              <Target className="w-6 h-6 text-emerald-500" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Under Budget</p>
-              <p className="text-2xl font-bold text-foreground">3 Weeks</p>
-            </div>
-          </div>
+    <div className="w-full pointer-events-auto">
+      
+      <div className="border-b border-white/10 pb-6 mb-8 flex justify-between items-end">
+        <div>
+          <h1 className="text-4xl font-medium tracking-tight mb-2">Global Net</h1>
+          <p className="text-sm font-mono text-white/50 uppercase tracking-widest">Decentralized Telemetry Feed</p>
         </div>
       </div>
 
-      {/* Active Quests */}
-      <div className="space-y-4 pt-4">
-        <div className="flex justify-between items-end">
-          <h2 className="text-lg font-semibold tracking-tight">Active Quests</h2>
-          <span className="text-sm font-medium text-primary cursor-pointer hover:underline">Explore all</span>
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <div className="space-y-3">
-          <div className="bg-card border border-border rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center gap-6">
-            <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center shrink-0">
-              <span className="text-2xl">🌱</span>
+        {/* Left Column: Streaks & Quests */}
+        <div className="lg:col-span-4 flex flex-col gap-6">
+          <div className="border border-white/10 bg-[#111] p-6 flex flex-col gap-6">
+            <h2 className="text-xs font-mono uppercase tracking-widest text-white/50 flex items-center gap-2 border-b border-white/10 pb-4">
+              <Terminal className="w-4 h-4 text-white/50" /> Node Status
+            </h2>
+            
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-mono uppercase text-white/50 mb-1">Uptime Streak</p>
+                <p className="text-2xl font-medium tracking-tight flex items-center gap-2">
+                  12 <span className="text-[10px] text-orange-500 font-mono">DAYS</span>
+                </p>
+              </div>
+              <Flame className="w-6 h-6 text-orange-500/50" />
             </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-foreground">Vegan January</h3>
-              <p className="text-sm text-muted-foreground mt-1">Replace all meat meals with plant-based alternatives for the entire month.</p>
-              <div className="mt-4 flex items-center gap-2">
-                <div className="flex -space-x-2">
-                  <div className="w-6 h-6 rounded-full border border-card bg-blue-100"></div>
-                  <div className="w-6 h-6 rounded-full border border-card bg-red-100"></div>
-                  <div className="w-6 h-6 rounded-full border border-card bg-purple-100"></div>
+
+            <div className="flex items-center justify-between pt-6 border-t border-white/10">
+              <div>
+                <p className="text-xs font-mono uppercase text-white/50 mb-1">Efficiency Ratio</p>
+                <p className="text-2xl font-medium tracking-tight flex items-center gap-2">
+                  3 <span className="text-[10px] text-emerald-400 font-mono">WEEKS</span>
+                </p>
+              </div>
+              <Target className="w-6 h-6 text-emerald-400/50" />
+            </div>
+          </div>
+
+          <div className="border border-white/10 bg-[#0d0d0d] p-6">
+            <h2 className="text-xs font-mono uppercase tracking-widest text-white/50 flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+              <span>Active Directive</span>
+              <span className="text-emerald-400">14/31</span>
+            </h2>
+            
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 border border-emerald-400/20 bg-emerald-400/5 flex items-center justify-center shrink-0">
+                <Hexagon className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div>
+                <h3 className="font-mono text-sm tracking-widest uppercase text-white/90 mb-1">Plant-Based Subroutine</h3>
+                <p className="text-xs text-white/40 uppercase font-mono leading-relaxed mb-4">
+                  Eliminate meat consumption for 31 sequential days.
+                </p>
+                <div className="h-1 w-full bg-white/5">
+                  <div className="h-1 bg-emerald-400" style={{ width: '45%' }}></div>
                 </div>
-                <span className="text-xs text-muted-foreground ml-2">1,204 members</span>
-              </div>
-            </div>
-            <div className="w-full sm:w-32 flex flex-col gap-2">
-              <div className="flex justify-between text-xs font-medium">
-                <span>Progress</span>
-                <span className="text-primary">14/31</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-2">
-                <div className="bg-primary h-2 rounded-full" style={{ width: '45%' }}></div>
+                <div className="flex justify-between mt-2 text-[10px] font-mono uppercase text-white/40">
+                  <span>Progress</span>
+                  <span>45%</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Social Feed (Strava Style) */}
-      <div className="space-y-4 pt-8">
-        <h2 className="text-lg font-semibold tracking-tight">Friend Activity</h2>
-        <div className="space-y-4">
-          
-          <FeedItem 
-            name="Alex Rivera"
-            avatar="bg-blue-100"
-            time="2 hours ago"
-            action="Logged a Zero-Emission Commute"
-            impact="Saved 4.2 kg CO₂"
-            initialKudos={12}
-          />
-
-          <FeedItem 
-            name="Sarah Chen"
-            avatar="bg-emerald-100"
-            time="5 hours ago"
-            action="Completed 'Vegan Week' Quest"
-            impact="Saved 18.5 kg CO₂"
-            initialKudos={45}
-            isQuest
-          />
-
-          <FeedItem 
-            name="Marcus Johnson"
-            avatar="bg-purple-100"
-            time="Yesterday"
-            action="Installed Solar Panels"
-            impact="Offsetting 1,200 kg CO₂ / year"
-            initialKudos={128}
-          />
-
+        {/* Right Column: Feed */}
+        <div className="lg:col-span-8">
+          <div className="border border-white/10 bg-[#111]">
+            <div className="p-6 border-b border-white/10 flex items-center justify-between">
+              <h2 className="text-xs font-mono uppercase tracking-widest text-white/50">Live Network Telemetry</h2>
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[10px] font-mono uppercase text-emerald-400 tracking-widest">Syncing</span>
+              </div>
+            </div>
+            
+            <div className="flex flex-col">
+              <FeedItem 
+                nodeId="A1F9.C4E2"
+                time="2h ago"
+                action="Logged Zero-Emission Transit"
+                impact="4.2 kg CO₂ bypassed"
+                initialKudos={12}
+              />
+              <FeedItem 
+                nodeId="B7D3.F8A1"
+                time="5h ago"
+                action="Completed Directive: Plant-Based"
+                impact="18.5 kg CO₂ bypassed"
+                initialKudos={45}
+                highlight
+              />
+              <FeedItem 
+                nodeId="C4E2.A1F9"
+                time="24h ago"
+                action="Hardware Upgraded: Solar Matrix"
+                impact="1,200 kg CO₂ / yr offset"
+                initialKudos={128}
+              />
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   );
 }
 
-function FeedItem({ name, avatar, time, action, impact, initialKudos, isQuest = false }: {
-  name: string;
-  avatar: string;
+function FeedItem({ nodeId, time, action, impact, initialKudos, highlight = false }: {
+  nodeId: string;
   time: string;
   action: string;
   impact: string;
   initialKudos: number;
-  isQuest?: boolean;
+  highlight?: boolean;
 }) {
   const [kudos, setKudos] = useState(initialKudos);
   const [given, setGiven] = useState(false);
@@ -129,39 +131,48 @@ function FeedItem({ name, avatar, time, action, impact, initialKudos, isQuest = 
     if (given) return;
     setKudos(prev => prev + 1);
     setGiven(true);
-    
-    toast.success(`You cheered for ${name}!`);
+    toast.success(`Signal boosted for Node ${nodeId}.`);
   };
 
   return (
-    <div className="bg-card border border-border rounded-3xl p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className={`w-10 h-10 rounded-full ${avatar} border border-border`}></div>
-          <div>
-            <p className="font-semibold text-sm text-foreground">{name}</p>
-            <p className="text-xs text-muted-foreground">{time}</p>
+    <div className={cn(
+      "p-6 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-colors",
+      highlight ? "bg-emerald-400/5" : "bg-[#0d0d0d] hover:bg-[#111]"
+    )}>
+      
+      <div className="flex items-start gap-4 flex-1">
+        <div className="w-10 h-10 border border-white/10 bg-white/5 flex items-center justify-center shrink-0">
+          <span className="text-xs font-mono text-white/50">{'</>'}</span>
+        </div>
+        <div>
+          <div className="flex items-center gap-3 mb-1">
+            <span className="text-sm font-mono font-medium text-white">{nodeId}</span>
+            <span className="text-[10px] font-mono text-white/40 uppercase">{time}</span>
           </div>
+          <p className="text-sm text-white/80 font-mono uppercase mb-1">{action}</p>
+          <p className={cn(
+            "text-xs font-mono uppercase tracking-widest",
+            highlight ? "text-emerald-400" : "text-white/50"
+          )}>
+            [{impact}]
+          </p>
         </div>
       </div>
-      
-      <div className="mb-4">
-        <p className="text-foreground font-medium">{action}</p>
-        <p className={`text-sm mt-1 font-semibold ${isQuest ? 'text-primary' : 'text-emerald-500'}`}>{impact}</p>
-      </div>
 
-      <div className="flex items-center gap-4 pt-4 border-t border-border">
-        <button 
-          onClick={handleKudos}
-          disabled={given}
-          className={`flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full transition-all ${
-            given ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-muted'
-          }`}
-        >
-          <Heart className={`w-4 h-4 ${given ? 'fill-primary' : ''}`} /> 
-          {kudos} {given ? 'Kudos Given' : 'Kudos'}
-        </button>
-      </div>
+      <button 
+        onClick={handleKudos}
+        disabled={given}
+        className={cn(
+          "flex items-center justify-center gap-2 px-4 py-2 border text-xs font-mono uppercase tracking-widest transition-colors w-full sm:w-auto shrink-0",
+          given 
+            ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-400" 
+            : "border-white/20 hover:border-white/40 text-white/60 hover:text-white"
+        )}
+      >
+        <Share2 className="w-3 h-3" />
+        {given ? `Boosted [${kudos}]` : `Boost Signal [${kudos}]`}
+      </button>
+
     </div>
   );
 }

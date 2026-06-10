@@ -1,17 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, CheckCircle2, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { CheckCircle2, Terminal } from "lucide-react";
 import { toast } from "sonner";
-import confetti from "canvas-confetti";
 import { createClient } from "@/lib/supabase/client";
+import { cn } from "@/lib/utils";
 
 export function InsightCard({ title, text, actionLabel }: { title: string, text: string, actionLabel: string }) {
   const [committed, setCommitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleCommit = async () => {
-    setCommitted(true);
+    setLoading(true);
 
     try {
       const supabase = createClient();
@@ -24,52 +24,46 @@ export function InsightCard({ title, text, actionLabel }: { title: string, text:
           status: "pending"
         }] as unknown as never[]);
       }
+      
+      setCommitted(true);
+      toast.success("Goal locked in. Telemetry updated.");
     } catch (e) {
       console.error("Failed to save commitment", e);
+      toast.error("Network error. Could not commit.");
+    } finally {
+      setLoading(false);
     }
-
-    confetti({
-      particleCount: 40,
-      spread: 60,
-      origin: { y: 0.8 },
-      colors: ['#10b981', '#3b82f6']
-    });
-    toast.success("Goal locked in!", {
-      description: "Log this activity later today to earn double streak points."
-    });
   };
 
   return (
-    <div className="bg-card border border-border rounded-3xl p-6 relative overflow-hidden shadow-sm transition-all duration-300">
-      <div className="relative z-10 flex flex-col sm:flex-row gap-4">
-        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center shrink-0">
-          <Sparkles className="w-5 h-5 text-primary-foreground" />
+    <div className={cn(
+      "border transition-colors duration-300 p-6 flex flex-col justify-between",
+      committed ? "border-emerald-400/30 bg-emerald-400/5" : "border-white/10 bg-[#111] hover:border-white/30"
+    )}>
+      <div className="mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <Terminal className="w-4 h-4 text-emerald-400" />
+          <h3 className="font-mono text-sm uppercase tracking-widest text-white/70">{title}</h3>
         </div>
-        <div className="flex-1">
-          <h3 className="font-semibold text-foreground mb-1">{title}</h3>
-          <p className="text-sm text-foreground/80 leading-relaxed mb-4">
-            {text}
-          </p>
-          
-          <div className="flex flex-col sm:flex-row items-center gap-4 mt-2">
-            {!committed ? (
-              <button 
-                onClick={handleCommit}
-                className="w-full sm:w-auto px-5 py-2.5 bg-primary text-primary-foreground rounded-full text-sm font-semibold hover:scale-105 transition-transform active:scale-95 shadow-md"
-              >
-                {actionLabel}
-              </button>
-            ) : (
-              <div className="flex items-center gap-2 text-sm font-semibold text-emerald-500 bg-emerald-500/10 px-4 py-2.5 rounded-full w-full sm:w-auto justify-center">
-                <CheckCircle2 className="w-5 h-5" /> Active Goal
-              </div>
-            )}
-            
-            <Link href="/insights" className="text-sm font-semibold text-muted-foreground flex items-center gap-1 hover:text-foreground transition-colors w-full sm:w-auto justify-center">
-              View all insights <ArrowRight className="w-4 h-4" />
-            </Link>
+        <p className="text-sm text-white/60 leading-relaxed font-light">
+          {text}
+        </p>
+      </div>
+      
+      <div>
+        {!committed ? (
+          <button 
+            onClick={handleCommit}
+            disabled={loading}
+            className="w-full sm:w-auto px-6 py-2 border border-white/20 hover:bg-white text-white hover:text-black transition-colors font-mono text-xs uppercase tracking-widest disabled:opacity-50"
+          >
+            {loading ? "Committing..." : actionLabel}
+          </button>
+        ) : (
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-emerald-400">
+            <CheckCircle2 className="w-4 h-4" /> Vector Active
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
