@@ -8,6 +8,9 @@
   <img src="https://img.shields.io/badge/Gemini-AI-blue?logo=google" />
   <img src="https://img.shields.io/badge/TypeScript-5-blue?logo=typescript" />
   <img src="https://img.shields.io/badge/TailwindCSS-4-38bdf8?logo=tailwindcss" />
+  <br/>
+  <img src="https://github.com/Yashraj2050/Trace/actions/workflows/ci.yml/badge.svg" alt="CI Status" />
+  <img src="https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel" />
 </div>
 
 ---
@@ -93,8 +96,8 @@ Built for **PromptWars** — a competition demonstrating the highest-quality AI-
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/trace.git
-cd trace
+git clone https://github.com/Yashraj2050/Trace.git
+cd Trace
 ```
 
 ### 2. Install Dependencies
@@ -211,13 +214,12 @@ npx vercel --prod
 ## CI/CD Pipeline
 
 Trace uses GitHub Actions for continuous integration. Every push and pull request to `main` triggers a workflow that runs:
-- `npm run lint`: Static code analysis
-- `npx tsc`: TypeScript type checking
-- `npm run test`: Vitest unit tests with coverage reporting
-- `npm run test:e2e`: Playwright End-to-End tests against a production-ready build
+- `npm run lint`: ESLint static code analysis
+- `npx tsc --noEmit`: TypeScript strict type checking
+- `npm run test`: Vitest unit tests with V8 coverage reporting
 - `npm run build`: Verification of Next.js production compilation
 
-Test coverage and Playwright HTML reports are automatically uploaded as job artifacts on every run.
+Coverage reports are automatically uploaded as job artifacts on every run.
 
 ---
 
