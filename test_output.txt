@@ -1,0 +1,17 @@
+
+> trace@0.1.0 test
+> vitest run --coverage
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.8 [39m[90m/Users/yashrajdnyaneshwarkuyate/Carbon_Footprint[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+ [32m✓[39m __tests__/profile.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 116[2mms[22m[39m
+ [32m✓[39m __tests__/community.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 110[2mms[22m[39m
+ [31m❯[39m __tests__/insights.test.tsx [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 7[2mms[22m[39m
+[31m     [31m×[31m renders without crashing[39m[32m 5[2mms[22m[39m
+ [32m✓[39m __tests__/dashboard.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 184[2mms[22m[39m
+ [32m✓[39m __tests__/auth.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+ [32m✓[39m __tests__/upload.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 61[2mms[22m[39m
+ [31m❯[39m __tests__/landing.test.tsx [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 20[2mms[22m[39m
+[31m     [31m×[31m renders without crashing[39m[32m 19[2mms[22m[39m

@@ -1,0 +1,69 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    name: Code Quality & Testing
+    runs-on: ubuntu-latest
+    
+    # We provide dummy environment variables for the build and testing processes 
+    # to succeed without hitting actual production APIs. 
+    # If the app requires actual connectivity during build/test, 
+    # these would need to be GitHub Repository Secrets instead.
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: "https://mock-supabase-url.supabase.co"
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "mock-anon-key-for-ci-purposes-only"
+      SUPABASE_SERVICE_ROLE_KEY: "mock-service-role-key-for-ci"
+      GEMINI_API_KEY: "mock-gemini-key-for-ci"
+      
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Lint Codebase
+        run: npm run lint
+
+      - name: TypeScript Type Check
+        run: npx tsc --noEmit
+
+      - name: Run Unit Tests
+        run: npm run test
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E Tests
+        run: npm run test:e2e
+        
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Verify Production Build
+        run: npm run build

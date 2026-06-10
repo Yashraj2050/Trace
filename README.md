@@ -208,6 +208,28 @@ npx vercel --prod
 
 ---
 
+## CI/CD Pipeline
+
+Trace uses GitHub Actions for continuous integration. Every push and pull request to `main` triggers a workflow that runs:
+- `npm run lint`: Static code analysis
+- `npx tsc`: TypeScript type checking
+- `npm run test`: Vitest unit tests with coverage reporting
+- `npm run test:e2e`: Playwright End-to-End tests against a production-ready build
+- `npm run build`: Verification of Next.js production compilation
+
+Test coverage and Playwright HTML reports are automatically uploaded as job artifacts on every run.
+
+---
+
+## Security Best Practices
+
+- **Never commit `.env.local`**: Ensure local secrets are kept out of source control.
+- **Row Level Security (RLS)**: Ensure your Supabase database has RLS policies enabled for all tables (`profiles`, `carbon_logs`, etc.) so users can only read/write their own data.
+- **Service Role Keys**: Only use `SUPABASE_SERVICE_ROLE_KEY` in secure Server Actions or Route Handlers. Never expose it to the client.
+- **Client Supabase Initialization**: Use `@supabase/ssr` to securely initialize the client with cookies and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+
+---
+
 ## Application Routes
 
 | Route | Description |
